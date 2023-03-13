@@ -1,0 +1,1 @@
+Import filen ind i Postman. Indeholder alle commands vi kan sende til maskinen med URL og det hele.
