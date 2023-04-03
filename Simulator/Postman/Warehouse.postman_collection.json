@@ -1,0 +1,93 @@
+{
+	"info": {
+		"_postman_id": "212d33a6-aaa2-42f5-a9fa-8769a4af89cb",
+		"name": "Warehouse",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GetInventory",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\"?>\r\n\r\n<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n\r\n<s:Body>\r\n    <m:GetInventory xmlns:m=\"http://tempuri.org/\">\r\n\r\n    </m:GetInventory>\r\n</s:Body>\r\n\r\n</s:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/Service.asmx",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"Service.asmx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PickItem",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\"?>\r\n\r\n<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n\r\n<s:Body>\r\n    <m:PickItem xmlns:m=\"http://tempuri.org/\">\r\n        <m:trayId>2</m:trayId>\r\n    </m:PickItem>\r\n</s:Body>\r\n\r\n</s:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/Service.asmx",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"Service.asmx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "InsertItem",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\"?>\r\n\r\n<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n\r\n<s:Body>\r\n    <m:InsertItem xmlns:m=\"http://tempuri.org/\">\r\n        <m:trayId>2</m:trayId>\r\n        <m:name>Dorito</m:name>\r\n    </m:InsertItem>\r\n</s:Body>\r\n\r\n</s:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/Service.asmx",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"Service.asmx"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
