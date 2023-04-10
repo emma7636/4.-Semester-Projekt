@@ -1,9 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <OutputType>Library</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>ALM Core</Title>
+    <Authors>marc7636</Authors>
+    <PackageTags>library</PackageTags>
+    <Company />
+    <AssemblyName>AssemblyLineManager.Core</AssemblyName>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	<PackageReadmeFile>readme.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+	<None Include="readme.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
 
 </Project>
