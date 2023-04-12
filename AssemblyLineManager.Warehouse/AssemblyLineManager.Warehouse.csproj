@@ -12,8 +12,8 @@
     <Company />
     <AssemblyName>AssemblyLineManager.Warehouse</AssemblyName>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
-	<PackageReadmeFile>readme.md</PackageReadmeFile>
-	<Version>1.0.0</Version>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
+	<Version>0.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,7 +21,7 @@
 		<Pack>True</Pack>
 		<PackagePath>\</PackagePath>
 	</None>
-    <PackageReference Include="AssemblyLineManager.CommonLib" Version="1.1.0" />
+    <PackageReference Include="AssemblyLineManager.CommonLib" Version="1.1.1" />
   </ItemGroup>
 
 </Project>
