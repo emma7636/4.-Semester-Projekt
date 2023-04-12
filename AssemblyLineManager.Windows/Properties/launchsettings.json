@@ -1,0 +1,10 @@
+{
+  "profiles": {
+	"AssemblyLineManager.Windows (Package)": {
+	  "commandName": "MsixPackage"
+	},
+	"AssemblyLineManager.Windows (Unpackaged)": {
+	  "commandName": "Project"
+	}
+  }
+}
