@@ -1,5 +1,9 @@
 ﻿using MQTTnet;
 using MQTTnet.Client;
+using MQTTnet.Client.Disconnecting;
+using MQTTnet.Client.Options;
+using MQTTnet.Client.Receiving;
+using MQTTnet.Server;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,34 +14,43 @@ namespace AssemblyLineManager.AssemblyStation
 {
     public partial class AssemblyStation
     {
-        private static MqttFactory? mqttFactory;
-        private static IMqttClient? mqttClient;
-        private static MqttClientOptions? options;
+        private static string res = "";
         private static async Task ConnectToClient()
         {
-            mqttFactory = new MqttFactory();
-            mqttClient = mqttFactory.CreateMqttClient();
-            options = new MqttClientOptionsBuilder()
-                .WithClientId("AssemblyStationClient")
+            _mqttFactory = new MqttFactory();
+            _mqttClient = _mqttFactory.CreateMqttClient();
+            IMqttClientOptions options = new MqttClientOptionsBuilder()
+                .WithClientId("AssemblyLineManagerClient")
                 .WithTcpServer("localhost", 1883)
-                .WithCleanSession()
+                .WithCleanSession(true)
                 .Build();
-            try
+
+            _mqttClient.UseConnectedHandler(e =>
             {
-                await mqttClient.ConnectAsync(options);
-            }
-            catch (Exception ex)
+                Console.WriteLine("Connected successfully with MQTT Brokers.");
+                SubscribeToTopics().Wait();
+                Console.WriteLine("Subscribed to topics.");
+            });
+
+            _mqttClient.UseApplicationMessageReceivedHandler(e =>
             {
-                Console.WriteLine("Connecting to MQTT Brokers failed.");
-                Console.WriteLine(ex.Message);
-            }
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("### RECEIVED APPLICATION MESSAGE ###")
+                .AppendLine($"+ Topic = {e.ApplicationMessage.Topic}")
+                .AppendLine($"+ Payload = {Encoding.UTF8.GetString(e.ApplicationMessage.Payload)}")
+                .AppendLine($"+ QoS = {e.ApplicationMessage.QualityOfServiceLevel}")
+                .AppendLine($"+ Retain = {e.ApplicationMessage.Retain}\n");
+                Console.WriteLine(sb.ToString());
+            });
+
+            await _mqttClient.ConnectAsync(options);
         }
 
         private static async Task DisconnectFromClient()
         {
             try
             {
-                await mqttClient.DisconnectAsync(MqttClientDisconnectReason.ServerShuttingDown);
+                await _mqttClient.DisconnectAsync();
             }
             catch (Exception ex)
             {
@@ -48,33 +61,13 @@ namespace AssemblyLineManager.AssemblyStation
 
         private static async Task SubscribeToTopics()
         {
-            if (mqttFactory != null && mqttClient != null)
-            {
-                if (mqttClient.IsConnected)
-                {
-                    var subscribeOptions = mqttFactory.CreateSubscribeOptionsBuilder().WithTopicFilter(
-                    f =>
-                    {
-                        f.WithTopic("emulator/status");
-                    }
-                ).WithTopicFilter(
-                    f =>
-                    {
-                        f.WithTopic("emulator/checkhealth");
-                    }
-                ).Build();
+            var subscribeOptions = _mqttFactory.CreateSubscribeOptionsBuilder()
+                .WithTopicFilter("emulator/status")
+                .WithTopicFilter("emulator/checkhealth")
+                .WithTopicFilter("emulator/echo")
+                .Build();
 
-                    await mqttClient.SubscribeAsync(subscribeOptions);
-                }
-                else
-                {
-                    Console.WriteLine("Lost connection to broker");
-                }
-            }
-            else
-            {
-                throw new Exception("This shouldn't have happened!");
-            }
+            await _mqttClient.SubscribeAsync(subscribeOptions);
         }
     }
 }

@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<OutputType>Library</OutputType>
+	<OutputType>Exe</OutputType>
 	<TargetFramework>net6.0</TargetFramework>
 	<ImplicitUsings>enable</ImplicitUsings>
 	<Nullable>enable</Nullable>
@@ -13,7 +13,7 @@
 	<AssemblyName>AssemblyLineManager.AssemblyStation</AssemblyName>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
-	<Version>0.0.1</Version>
+	<Version>0.1.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,7 +22,8 @@
 		<PackagePath>\</PackagePath>
 	</None>
 	<PackageReference Include="AssemblyLineManager.CommonLib" Version="1.1.1" />
-	<PackageReference Include="MQTTnet" Version="4.1.4.563" />
+	<PackageReference Include="MQTTnet" Version="3.1.2" />
+	<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
 </Project>

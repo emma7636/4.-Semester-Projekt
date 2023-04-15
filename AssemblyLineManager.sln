@@ -8,6 +8,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssemblyLineManager.DataContracts", "AssemblyLineManager.DataContracts\AssemblyLineManager.DataContracts.csproj", "{19FFC548-8FD5-417D-B6E6-BFBDCBA91D2E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssemblyLineManager.Tests", "AssemblyLineManager.Tests\AssemblyLineManager.Tests.csproj", "{009A14E6-47D3-4809-A22E-03F2197F14AE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5F34F5D7-D883-4A02-A6FF-5A5A8333BF0D} = {5F34F5D7-D883-4A02-A6FF-5A5A8333BF0D}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssemblyLineManager.UITests", "AssemblyLineManager.UITests\AssemblyLineManager.UITests.csproj", "{3F1892EF-6360-4F9F-8DB4-7849FB792318}"
 EndProject

@@ -1,4 +1,5 @@
 ﻿using MQTTnet;
+using MQTTnet.Client;
 using MQTTnet.Protocol;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace AssemblyLineManager.AssemblyStation
 {
     public partial class AssemblyStation
     {
-        public static async Task SendCommand()
+        private static async Task SendCommand()
         {
             MqttApplicationMessage var = new MqttApplicationMessageBuilder()
             .WithTopic("emulator/operation")
@@ -18,17 +19,14 @@ namespace AssemblyLineManager.AssemblyStation
             .WithPayloadFormatIndicator(MqttPayloadFormatIndicator.CharacterData)
             .WithContentType("schema:JSON")
             .Build();
-            if (mqttClient != null) {
-                if (mqttClient.IsConnected) {
-                    await mqttClient.PublishAsync(var);
-                }
-                else {
-                    Console.WriteLine("Lost connection to broker");
-                }
+            if (_mqttClient.IsConnected)
+            {
+                await _mqttClient.PublishAsync(var);
             }
-            else {
-                Console.WriteLine("This shouldn't have happened");
-             }
+            else
+            {
+                Console.WriteLine("Lost connection to broker");
+            }
         }
     }
 }

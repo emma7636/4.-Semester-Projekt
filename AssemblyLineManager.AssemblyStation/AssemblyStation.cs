@@ -1,18 +1,27 @@
 ﻿using AssemblyLineManager.CommonLib;
+using MQTTnet.Client;
+using MQTTnet;
+using MQTTnet.Client.Options;
 
 namespace AssemblyLineManager.AssemblyStation
 {
     public partial class AssemblyStation : ICommunicationController
     {
-        private Task Task { get; set; }
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+        private static MqttFactory _mqttFactory;
+        private static IMqttClient _mqttClient;
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public AssemblyStation()
         {
-            Task = ConnectToClient(); //Assigning it to a variable so that it keeps running in the background since constructors are not async
+            ConnectToClient().Wait();
         }
 
         public KeyValuePair<int, string> GetState()
         {
-            throw new NotImplementedException();
+            
+            SendCommand().Wait();
+
+            return new KeyValuePair<int, string>(1, res);
         }
 
         public bool SendCommand(string machineName, string command, string[]? commandParameters = null)
@@ -22,7 +31,17 @@ namespace AssemblyLineManager.AssemblyStation
 
         ~AssemblyStation()
         {
-            Task = DisconnectFromClient();
+            DisconnectFromClient().Wait();
+        }
+
+        public static void Main(string[] args)
+        {
+            AssemblyStation assemblyStation = new AssemblyStation();
+            while (true)
+            {
+                assemblyStation.GetState();
+                Thread.Sleep(9000);
+            }
         }
     }
 }

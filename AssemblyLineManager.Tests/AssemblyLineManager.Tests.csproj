@@ -7,7 +7,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="AssemblyLineManager.AGV" Version="0.0.1" />
-		<PackageReference Include="AssemblyLineManager.AssemblyStation" Version="0.0.1" />
 		<PackageReference Include="AssemblyLineManager.CommonLib" Version="1.1.1" />
 		<PackageReference Include="AssemblyLineManager.Core" Version="0.0.1" />
 		<PackageReference Include="AssemblyLineManager.Warehouse" Version="0.0.1" />
@@ -19,6 +18,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\AssemblyLineManager.AssemblyStation\AssemblyLineManager.AssemblyStation.csproj" />
 		<ProjectReference Include="..\AssemblyLineManager\AssemblyLineManager.csproj" />
 	</ItemGroup>
 </Project>
