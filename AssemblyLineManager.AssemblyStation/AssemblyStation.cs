@@ -5,13 +5,15 @@ namespace AssemblyLineManager.AssemblyStation;
 
 public partial class AssemblyStation : ICommunicationController
 {
-    private static Dictionary<int, string> stateLUT = new Dictionary<int, string>();
+    private static Dictionary<int, string> stateLUT = new Dictionary<int, string>(); //Lookup table for the various states of the assembly station
 
     static AssemblyStation(){
+        //Generate a lookup table for the various states
         stateLUT.Add(0, "Idle");
         stateLUT.Add(1, "Executing");
         stateLUT.Add(2, "Error");
 
+        //Just shut up already
         _mqttFactory = new MqttFactory();
         _mqttClient = _mqttFactory.CreateMqttClient();
     }
