@@ -1,15 +1,21 @@
 ﻿using AssemblyLineManager.CommonLib;
-using MQTTnet.Client;
 using MQTTnet;
 
 namespace AssemblyLineManager.AssemblyStation;
 
 public partial class AssemblyStation : ICommunicationController
 {
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    private static MqttFactory _mqttFactory;
-    private static IMqttClient _mqttClient;
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    private static Dictionary<int, string> stateLUT = new Dictionary<int, string>();
+
+    static AssemblyStation(){
+        stateLUT.Add(0, "Idle");
+        stateLUT.Add(1, "Executing");
+        stateLUT.Add(2, "Error");
+
+        _mqttFactory = new MqttFactory();
+        _mqttClient = _mqttFactory.CreateMqttClient();
+    }
+
     public AssemblyStation()
     {
         ConnectToClient().Wait();
@@ -17,13 +23,46 @@ public partial class AssemblyStation : ICommunicationController
 
     public KeyValuePair<int, string> GetState()
     {
-        
-        throw new NotImplementedException();
+        return new KeyValuePair<int, string>(latestStatus.State, stateLUT[latestStatus.State]);
     }
 
     public bool SendCommand(string machineName, string command, string[]? commandParameters = null)
     {
-        throw new NotImplementedException();
+        latestEcho = null;
+        latestCheckHealth = null;
+
+        if(command.Equals("emulator/operation"))
+        {
+            if (!_mqttClient.IsConnected)
+            {
+                Console.WriteLine("Connection to assembly station lost!");
+                return false;
+            }
+
+            SendCommand().Wait();
+
+            while (_mqttClient.IsConnected)
+            {
+                DateTime time = DateTime.Now;
+                while (latestCheckHealth == null)
+                {
+                    if ((DateTime.Now - time).TotalSeconds > 12)
+                    {
+                        Console.WriteLine("CheckHealth packet didn't arrive, is everything okay?\nContinuing...");
+                        return false;
+                    }
+                    Thread.Sleep(100);
+                }
+                return latestCheckHealth.IsHealthy;
+            }
+
+            Console.WriteLine("Connection to assembly station lost!");
+            return false;
+        }
+        else
+        {
+            throw new ArgumentException("This command doesn't exist");
+        }
     }
 
     ~AssemblyStation()
@@ -36,8 +75,9 @@ public partial class AssemblyStation : ICommunicationController
         AssemblyStation assemblyStation = new AssemblyStation();
         while (true)
         {
-            SendCommand().Wait();
-            Thread.Sleep(10000);
+            Console.WriteLine();
+            Console.WriteLine(assemblyStation.GetState());
+            Console.WriteLine(assemblyStation.SendCommand("name", "emulator/operation"));
         }
     }
 }

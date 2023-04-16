@@ -1,4 +1,4 @@
-﻿using MQTTnet;
+using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Client.Options;
 using MQTTnet.Server;
@@ -7,10 +7,11 @@ namespace AssemblyLineManager.AssemblyStation;
 
 public partial class AssemblyStation
 {
+    private static readonly MqttFactory _mqttFactory;
+    private static readonly IMqttClient _mqttClient;
+
     private static async Task ConnectToClient()
     {
-        _mqttFactory = new MqttFactory();
-        _mqttClient = _mqttFactory.CreateMqttClient();
         IMqttClientOptions options = new MqttClientOptionsBuilder()
             .WithClientId("AssemblyLineManagerClient")
             .WithTcpServer("localhost", 1883)
@@ -19,9 +20,14 @@ public partial class AssemblyStation
 
         _mqttClient.UseConnectedHandler(e =>
         {
-            Console.WriteLine("Connected successfully with MQTT Brokers.");
+            Console.WriteLine("Connected successfully with MQTT Broker.");
             SubscribeToTopics().Wait();
             Console.WriteLine("Subscribed to topics.");
+        });
+
+        _mqttClient.UseDisconnectedHandler(e =>
+        {
+            Console.WriteLine("Disconnected from MQTT Broker unexpectedly.");
         });
 
         _mqttClient.UseApplicationMessageReceivedHandler(MessageReceivedHandling);
