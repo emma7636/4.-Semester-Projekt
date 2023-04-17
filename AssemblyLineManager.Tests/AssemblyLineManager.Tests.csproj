@@ -10,6 +10,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="AssemblyLineManager.AGV" Version="0.0.1" />
+		<PackageReference Include="AssemblyLineManager.AssemblyStation" Version="0.0.1" />
+		<PackageReference Include="AssemblyLineManager.CommonLib" Version="1.1.1" />
+		<PackageReference Include="AssemblyLineManager.Core" Version="0.0.1" />
+		<PackageReference Include="AssemblyLineManager.Warehouse" Version="0.0.1" />
 		<PackageReference Include="FluentAssertions" Version="6.10.0" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
 		<PackageReference Include="NUnit" Version="3.13.3" />

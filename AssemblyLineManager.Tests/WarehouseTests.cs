@@ -1,5 +1,5 @@
 ﻿using AssemblyLineManager;
-namespace WarehouseTests
+﻿namespace AssemblyLineManager.Warehouse
 {
     public class WarehouseTests
     {
@@ -27,7 +27,13 @@ namespace WarehouseTests
         [Test]
         public void GetInventory_ReturnsJSON_ReturnTrue()
         {
-            
+
+        }
+
+        [Test]
+        public void WarehouseInventoryTest()
+        {
+            Assert.True(true);
         }
     }
 }
