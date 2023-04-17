@@ -1,4 +1,4 @@
-﻿using AssemblyLineManager;
+using AssemblyLineManager;
 namespace WarehouseTests
 {
     public class WarehouseTests
