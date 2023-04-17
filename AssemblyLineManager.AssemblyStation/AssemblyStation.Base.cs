@@ -18,6 +18,7 @@ public partial class AssemblyStation : ICommunicationController
         _mqttClient = _mqttFactory.CreateMqttClient();
     }
 
+    //Establish connection to the MQTT broker
     public AssemblyStation()
     {
         ConnectToClient().Wait();
@@ -74,6 +75,7 @@ public partial class AssemblyStation : ICommunicationController
         }
     }
 
+    //Make sure to close the connection when we're done
     ~AssemblyStation()
     {
         DisconnectFromClient().Wait();
