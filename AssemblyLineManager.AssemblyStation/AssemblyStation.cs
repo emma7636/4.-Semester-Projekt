@@ -23,9 +23,10 @@ public partial class AssemblyStation : ICommunicationController
         ConnectToClient().Wait();
     }
 
-    public KeyValuePair<int, string> GetState()
+    public KeyValuePair<string, string>[] GetState()
     {
-        return new KeyValuePair<int, string>(latestStatus.State, stateLUT[latestStatus.State]);
+        //return new KeyValuePair<int, string>(latestStatus.State, stateLUT[latestStatus.State]);
+        throw new NotImplementedException();
     }
 
     public bool SendCommand(string machineName, string command, string[]? commandParameters = null)
