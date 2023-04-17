@@ -13,7 +13,7 @@
 	<AssemblyName>AssemblyLineManager.AssemblyStation</AssemblyName>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
-	<Version>0.1.1</Version>
+	<Version>0.2.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
