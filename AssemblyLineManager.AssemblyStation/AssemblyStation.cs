@@ -30,10 +30,11 @@ public partial class AssemblyStation : ICommunicationController
 
     public bool SendCommand(string machineName, string command, string[]? commandParameters = null)
     {
+        //Deleting old data so we don't get confused
         latestEcho = null;
         latestCheckHealth = null;
 
-        if(command.Equals("emulator/operation"))
+        if(command.Equals("emulator/operation")) //Checking what command they want us to send
         {
             if (!_mqttClient.IsConnected)
             {
@@ -41,14 +42,14 @@ public partial class AssemblyStation : ICommunicationController
                 return false;
             }
 
-            SendCommand().Wait();
+            SendCommand().Wait(); //Send the command
 
-            while (_mqttClient.IsConnected)
+            while (_mqttClient.IsConnected) //Just in case we lose connection while waiting
             {
                 DateTime time = DateTime.Now;
-                while (latestCheckHealth == null)
+                while (latestCheckHealth == null) //Wait for the checkHealth packet to arrive
                 {
-                    if ((DateTime.Now - time).TotalSeconds > 12)
+                    if ((DateTime.Now - time).TotalSeconds > 12) //If we don't get a response in 12 seconds, something is wrong
                     {
                         Console.WriteLine("CheckHealth packet didn't arrive, is everything okay?\nContinuing...");
                         return false;
@@ -63,7 +64,7 @@ public partial class AssemblyStation : ICommunicationController
         }
         else
         {
-            throw new ArgumentException("This command doesn't exist");
+            throw new ArgumentException("This command doesn't exist"); //You made a spelling mistake fool
         }
     }
 
@@ -75,7 +76,7 @@ public partial class AssemblyStation : ICommunicationController
     public static void Main(string[] args)
     {
         AssemblyStation assemblyStation = new AssemblyStation();
-        while (true)
+        for (int i = 0; i < 5; i++)
         {
             Console.WriteLine();
             Console.WriteLine(assemblyStation.GetState());
