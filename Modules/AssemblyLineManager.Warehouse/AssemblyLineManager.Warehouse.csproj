@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
@@ -7,25 +7,16 @@
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>ALM Warehouse</Title>
-	<Authors>marc7636, bare.mikkel, alex, kimjelassen, LucasHermann, Kochemanden</Authors>
-	<PackageTags>library</PackageTags>
+    <Authors>marc7636</Authors>
+    <PackageTags>library</PackageTags>
     <Company />
     <AssemblyName>AssemblyLineManager.Warehouse</AssemblyName>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<PackageReadmeFile>readme.md</PackageReadmeFile>
-	<Version>1.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="NewFile1.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
-	<None Include="..\README.md">
-		<Pack>True</Pack>
-		<PackagePath>\</PackagePath>
-	</None>
-    <PackageReference Include="AssemblyLineManager.CommonLib" Version="1.1.0" />
+	<None Include="readme.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
 </Project>

@@ -1,13 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
-
-	<ItemGroup>
-	  <None Remove="NewFile1.txt" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="FluentAssertions" Version="6.10.0" />
@@ -18,6 +14,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\AssemblyLineManager\AssemblyLineManager.csproj" />
+		<ProjectReference Include="..\UnoTestApp1\UnoTestApp1.csproj" />
 	</ItemGroup>
 </Project>
