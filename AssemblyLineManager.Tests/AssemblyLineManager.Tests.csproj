@@ -1,9 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="NewFile1.txt" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="AssemblyLineManager.AGV" Version="0.0.1" />
