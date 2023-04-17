@@ -25,8 +25,13 @@ public partial class AssemblyStation : ICommunicationController
 
     public KeyValuePair<string, string>[] GetState()
     {
+        KeyValuePair<string, string>[] stateArray = new KeyValuePair<string, string>[4];
+        stateArray[0] = new KeyValuePair<string, string>("latestOperation", latestStatus.LastOperation.ToString());
+        stateArray[1] = new KeyValuePair<string, string>("currentOperation", latestStatus.CurrentOperation.ToString());
+        stateArray[2] = new KeyValuePair<string, string>("state", latestStatus.State.ToString());
+        stateArray[3] = new KeyValuePair<string, string>("timeStamp", latestStatus.TimeStamp.ToString());
         //return new KeyValuePair<int, string>(latestStatus.State, stateLUT[latestStatus.State]);
-        throw new NotImplementedException();
+        return stateArray;
     }
 
     public bool SendCommand(string machineName, string command, string[]? commandParameters = null)
