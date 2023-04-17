@@ -6,11 +6,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AssemblyLineManager.AGV" Version="0.0.1" />
-		<PackageReference Include="AssemblyLineManager.AssemblyStation" Version="0.0.1" />
-		<PackageReference Include="AssemblyLineManager.CommonLib" Version="1.1.1" />
-		<PackageReference Include="AssemblyLineManager.Core" Version="0.0.1" />
-		<PackageReference Include="AssemblyLineManager.Warehouse" Version="0.0.1" />
 		<PackageReference Include="FluentAssertions" Version="6.10.0" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
 		<PackageReference Include="NUnit" Version="3.13.3" />
@@ -19,6 +14,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\AssemblyLineManager.AGV\AssemblyLineManager.AGV.csproj" />
+		<ProjectReference Include="..\AssemblyLineManager.AssemblyStation\AssemblyLineManager.AssemblyStation.csproj" />
+		<ProjectReference Include="..\AssemblyLineManager.CommonLib\AssemblyLineManager.CommonLib.csproj" />
+		<ProjectReference Include="..\AssemblyLineManager.Core\AssemblyLineManager.Core.csproj" />
+		<ProjectReference Include="..\AssemblyLineManager.Warehouse\AssemblyLineManager.Warehouse.csproj" />
 		<ProjectReference Include="..\AssemblyLineManager\AssemblyLineManager.csproj" />
 	</ItemGroup>
 </Project>
