@@ -12,19 +12,19 @@ namespace AssemblyLineManager.Tests
     {
         internal static AssemblyStation.AssemblyStation assemblyStation = new AssemblyStation.AssemblyStation();
         [OneTimeSetUp]
-        public async Task Setup()
+        public void Setup()
         {
-            await assemblyStation.GetState();
+            Console.WriteLine("Preparing AssemblyStation tests");
         }
 
         [Test]
-        public async Task AssemblyStationGetStatusTest()
+        public void AssemblyStationGetStatusTest()
         {
-            Task<KeyValuePair<int, string>> task = assemblyStation.GetState();
-            task.Wait();
-            Console.WriteLine(task.Result);
-
-            Assert.True(true);
+            KeyValuePair<string, string>[] test = assemblyStation.GetState();
+            Console.WriteLine(test);
+            Assert.That(test, Is.All.Not.Null);
+            Assert.That(test, Contains.Item(new KeyValuePair<string,string>("lastOperation", "12345")));
+            Assert.That(test, Contains.Item(new KeyValuePair<string, string>("currentOperation", "12345")));
         }
     }
 }
