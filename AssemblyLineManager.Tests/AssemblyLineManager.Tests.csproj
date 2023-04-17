@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
@@ -11,13 +11,12 @@
 		<PackageReference Include="NUnit" Version="3.13.3" />
 		<PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
 		<PackageReference Include="coverlet.collector" Version="3.2.0" />
+		<PackageReference Include="AssemblyLineManager.CommonLib" Version="1.2.0" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\AssemblyLineManager.AGV\AssemblyLineManager.AGV.csproj" />
 		<ProjectReference Include="..\AssemblyLineManager.AssemblyStation\AssemblyLineManager.AssemblyStation.csproj" />
-		<ProjectReference Include="..\AssemblyLineManager.CommonLib\AssemblyLineManager.CommonLib.csproj" />
-		<ProjectReference Include="..\AssemblyLineManager.Core\AssemblyLineManager.Core.csproj" />
 		<ProjectReference Include="..\AssemblyLineManager.Warehouse\AssemblyLineManager.Warehouse.csproj" />
 		<ProjectReference Include="..\AssemblyLineManager\AssemblyLineManager.csproj" />
 	</ItemGroup>

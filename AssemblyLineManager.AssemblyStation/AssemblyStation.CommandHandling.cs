@@ -8,11 +8,11 @@ namespace AssemblyLineManager.AssemblyStation;
 
 public partial class AssemblyStation
 {
-    private static Echo? latestEcho;
-    private static Status latestStatus = new Status();
-    private static CheckHealth? latestCheckHealth;
+    private Echo? latestEcho;
+    private Status latestStatus = new Status();
+    private CheckHealth? latestCheckHealth;
 
-    private static async Task SendCommand()
+    private async Task SendCommand()
     {
         MqttApplicationMessage var = new MqttApplicationMessageBuilder()
         .WithTopic("emulator/operation")
@@ -31,7 +31,7 @@ public partial class AssemblyStation
         }
     }
 
-    private static void MessageReceivedHandling(MqttApplicationMessageReceivedEventArgs e)
+    private void MessageReceivedHandling(MqttApplicationMessageReceivedEventArgs e)
     {
         string json = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
         switch (e.ApplicationMessage.Topic){

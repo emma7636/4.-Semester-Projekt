@@ -8,9 +8,9 @@ namespace AssemblyLineManager.AssemblyStation;
 public partial class AssemblyStation
 {
     private static readonly MqttFactory _mqttFactory;
-    private static readonly IMqttClient _mqttClient;
+    private readonly IMqttClient _mqttClient;
 
-    private static async Task ConnectToClient()
+    private async Task ConnectToClient()
     {
         //Setting up the required info to establish a connection to the MQTT broker.
         IMqttClientOptions options = new MqttClientOptionsBuilder()
@@ -41,7 +41,7 @@ public partial class AssemblyStation
     }
 
     //Manually disconnect from the MQTT broker.
-    private static async Task DisconnectFromClient()
+    private async Task DisconnectFromClient()
     {
         try
         {
@@ -55,7 +55,7 @@ public partial class AssemblyStation
     }
 
     //Subscribe to the topics we want to receive messages from.
-    private static async Task SubscribeToTopics()
+    private async Task SubscribeToTopics()
     {
         var subscribeOptions = _mqttFactory.CreateSubscribeOptionsBuilder()
             .WithTopicFilter("emulator/status")

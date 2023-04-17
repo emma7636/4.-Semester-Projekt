@@ -15,23 +15,24 @@ public partial class AssemblyStation : ICommunicationController
 
         //Just shut up already
         _mqttFactory = new MqttFactory();
-        _mqttClient = _mqttFactory.CreateMqttClient();
     }
 
     //Establish connection to the MQTT broker
     public AssemblyStation()
     {
+        //Just shut up already (again)
+        _mqttClient = _mqttFactory.CreateMqttClient();
+
         ConnectToClient().Wait();
     }
 
     public KeyValuePair<string, string>[] GetState()
     {
         KeyValuePair<string, string>[] stateArray = new KeyValuePair<string, string>[4];
-        stateArray[0] = new KeyValuePair<string, string>("latestOperation", latestStatus.LastOperation.ToString());
+        stateArray[0] = new KeyValuePair<string, string>("lastOperation", latestStatus.LastOperation.ToString());
         stateArray[1] = new KeyValuePair<string, string>("currentOperation", latestStatus.CurrentOperation.ToString());
-        stateArray[2] = new KeyValuePair<string, string>("state", latestStatus.State.ToString());
+        stateArray[2] = new KeyValuePair<string, string>("state", stateLUT[latestStatus.State]);
         stateArray[3] = new KeyValuePair<string, string>("timeStamp", latestStatus.TimeStamp.ToString());
-        //return new KeyValuePair<int, string>(latestStatus.State, stateLUT[latestStatus.State]);
         return stateArray;
     }
 
@@ -81,7 +82,7 @@ public partial class AssemblyStation : ICommunicationController
         DisconnectFromClient().Wait();
     }
 
-    public static void Main(string[] args)
+    /*public static void Main(string[] args)
     {
         AssemblyStation assemblyStation = new AssemblyStation();
         for (int i = 0; i < 5; i++)
@@ -90,5 +91,5 @@ public partial class AssemblyStation : ICommunicationController
             Console.WriteLine(assemblyStation.GetState());
             Console.WriteLine(assemblyStation.SendCommand("name", "emulator/operation"));
         }
-    }
+    }*/
 }
