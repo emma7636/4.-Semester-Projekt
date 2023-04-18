@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -6,16 +6,8 @@ using Newtonsoft.Json;
 
 namespace AssemblyLineManager.AGV
 {
-    public class AGVClient
+    public partial class AGVClient
     {
-        private readonly HttpClient _httpClient;
-        private readonly string _baseUrl = "http://localhost:8082/v1/status/";
-
-        public AGVClient()
-        {
-            _httpClient = new HttpClient();
-        }
-
         public async Task<string> GetStatus()
         {
             HttpResponseMessage response = await _httpClient.GetAsync(_baseUrl);
