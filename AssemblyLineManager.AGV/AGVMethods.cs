@@ -10,7 +10,7 @@ namespace AssemblyLineManager.AGV
     {
         public async Task<string> GetStatus()
         {
-            HttpResponseMessage response = await _httpClient.GetAsync(_baseUrl);
+            HttpResponseMessage response = await httpClient.GetAsync(baseUrl);
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
             return responseBody;
@@ -39,7 +39,7 @@ namespace AssemblyLineManager.AGV
         {
             string json = JsonConvert.SerializeObject(payload);
             StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await _httpClient.PutAsync(_baseUrl, content);
+            HttpResponseMessage response = await httpClient.PutAsync(baseUrl, content);
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
             return responseBody;

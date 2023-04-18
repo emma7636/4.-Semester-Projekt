@@ -7,10 +7,6 @@ namespace AssemblyLineManager.AGV
         private readonly HttpClient httpClient;
         private readonly string baseUrl = "http://localhost:8082/v1/status/";
 
-        public AGVClient()
-        {
-            httpClient = new HttpClient();
-        }
-
+        public AGVClient() => httpClient = new HttpClient();
     }
 }
