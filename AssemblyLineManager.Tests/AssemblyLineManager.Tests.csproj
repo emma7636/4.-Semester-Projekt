@@ -16,7 +16,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\AssemblyLineManager.AGV\AssemblyLineManager.AGV.csproj" />
 		<ProjectReference Include="..\AssemblyLineManager.AssemblyStation\AssemblyLineManager.AssemblyStation.csproj" />
-		<ProjectReference Include="..\AssemblyLineManager.CommonLib\AssemblyLineManager.CommonLib.csproj" />
 		<ProjectReference Include="..\AssemblyLineManager.Core\AssemblyLineManager.Core.csproj" />
 		<ProjectReference Include="..\AssemblyLineManager.Warehouse\AssemblyLineManager.Warehouse.csproj" />
 		<ProjectReference Include="..\AssemblyLineManager\AssemblyLineManager.csproj" />
