@@ -25,9 +25,10 @@ namespace AssemblyLineManager.Warehouse
         }
         public static async Task<String> PickItem(int id) // Method that sends command via SOAP to warehouse for picking an item
         {
-            rewriteXML(id, null, "PickItem.xml");
+            string xmlName = "PickItem.xml";
+            RewriteXML(id, null, xmlName);
             string postRequest = "";
-            HttpResponseMessage response = await client.PostAsync("/Service.asmx", SetSC("PickItem.xml"));
+            HttpResponseMessage response = await client.PostAsync("/Service.asmx", SetSC(xmlName));
             if (response.IsSuccessStatusCode)
             {
                 postRequest = await response.Content.ReadAsStringAsync();
@@ -37,9 +38,10 @@ namespace AssemblyLineManager.Warehouse
         }
         public static async Task<String> InsertItem(int id, string name) // Method that sends command via SOAP to warehouse for picking an item
         {
-            rewriteXML(id, name, "InsertItem.xml");
+            string xmlName = "PickItem.xml";
+            RewriteXML(id, name, xmlName);
             string postRequest = "";
-            HttpResponseMessage response = await client.PostAsync("/Service.asmx", SetSC("InsertItem.xml"));
+            HttpResponseMessage response = await client.PostAsync("/Service.asmx", SetSC(xmlName));
             if (response.IsSuccessStatusCode)
             {
                 postRequest = await response.Content.ReadAsStringAsync();
@@ -47,12 +49,8 @@ namespace AssemblyLineManager.Warehouse
             Console.WriteLine(postRequest);
             return postRequest;
         }
-        private JsonArray? GetInventory() {
-
-            return null;
-        }
         
-       private static HttpClient client = new HttpClient();
+        private static HttpClient client = new HttpClient();
         private static StringContent SetSC(string XmlFileName)
         {
             string pathToPost = path+@"\"+XmlFileName;
@@ -79,7 +77,7 @@ namespace AssemblyLineManager.Warehouse
             return getRequest;
         }
         
-        public static void rewriteXML(int trayId, string? name, string xmlName)
+        private static void RewriteXML(int trayId, string? name, string xmlName)
         {
             XmlDocument doc = new XmlDocument();
             doc.Load(path+@"\"+xmlName);
