@@ -25,13 +25,22 @@ namespace AssemblyLineManager.Tests
         [Test]
         public void AssemblyStationGetStatusTest()
         {
-            assemblyStation.SendCommand("name", "emulator/operation");
-            assemblyStation.SendCommand("name", "emulator/operation");
-            KeyValuePair<string, string>[] test = assemblyStation.GetState();
-            Console.WriteLine(test.ToString());
-            Assert.That(test, Is.All.Not.Null);
-            Assert.That(test, Contains.Item(new KeyValuePair<string,string>("lastOperation", "12345")));
-            Assert.That(test, Contains.Item(new KeyValuePair<string, string>("currentOperation", "12345")));
+            {
+                assemblyStation.SendCommand("name", "emulator/operation");
+                KeyValuePair<string, string>[] test = assemblyStation.GetState();
+                Console.WriteLine(test.ToString());
+                Assert.That(test, Is.All.Not.Null);
+                Assert.That(test, Contains.Item(new KeyValuePair<string, string>("currentOperation", "12345")));
+            }
+
+            {
+                assemblyStation.SendCommand("name", "emulator/operation");
+                KeyValuePair<string, string>[] test = assemblyStation.GetState();
+                Console.WriteLine(test.ToString());
+                Assert.That(test, Is.All.Not.Null);
+                Assert.That(test, Contains.Item(new KeyValuePair<string, string>("lastOperation", "12345")));
+                Assert.That(test, Contains.Item(new KeyValuePair<string, string>("currentOperation", "12345")));
+            }
         }
 
         [Test]
