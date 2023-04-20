@@ -1,7 +1,5 @@
-﻿using System.Net.Http;
-
-namespace AssemblyLineManager.AGV
-{ 
+﻿namespace AssemblyLineManager.AGV
+{
     //Setup connection to AGV
     public partial class AGVClient
     {
