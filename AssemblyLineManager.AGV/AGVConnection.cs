@@ -2,6 +2,7 @@
 
 namespace AssemblyLineManager.AGV
 { 
+    //Setup connection to AGV
     public partial class AGVClient
     {
         private readonly HttpClient httpClient;

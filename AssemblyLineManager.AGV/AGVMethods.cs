@@ -8,6 +8,7 @@ namespace AssemblyLineManager.AGV
 {
     public partial class AGVClient
     {
+        //Get the current status of the AGV
         public async Task<string> GetStatus()
         {
             HttpResponseMessage response = await httpClient.GetAsync(baseUrl);
@@ -16,6 +17,7 @@ namespace AssemblyLineManager.AGV
             return responseBody;
         }
 
+        //Load desired program into AGV
         public async Task<string> LoadProgram(string programName)
         {
             var payload = new
@@ -26,6 +28,7 @@ namespace AssemblyLineManager.AGV
             return await SendPutRequest(payload);
         }
 
+        //Execute previously specified program on the AGV
         public async Task<string> ExecuteProgram()
         {
             var payload = new
@@ -35,6 +38,7 @@ namespace AssemblyLineManager.AGV
             return await SendPutRequest(payload);
         }
 
+        //Send currently active PUT request (Load, Execute)
         private async Task<string> SendPutRequest(object payload)
         {
             string json = JsonConvert.SerializeObject(payload);
