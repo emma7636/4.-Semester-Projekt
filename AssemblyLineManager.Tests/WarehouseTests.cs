@@ -1,4 +1,4 @@
-﻿using AssemblyLineManager;
+using AssemblyLineManager;
 ﻿namespace AssemblyLineManager.Warehouse
 {
     public class WarehouseTests
@@ -27,7 +27,8 @@
         [Test]
         public void GetInventory_ReturnsJSON_ReturnTrue()
         {
-
+            
+>>>>>>>>> Temporary merge branch 2
         }
 
         [Test]

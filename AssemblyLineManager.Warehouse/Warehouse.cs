@@ -3,12 +3,14 @@ using System.Xml.Linq;
 using System.IO;
 using System.Net.Http;
 using System;
+using System.Text;
+using System.Xml;
 
 namespace AssemblyLineManager.Warehouse
 {
     public class Warehouse
     {
-        string URL = "http://localhost:8081/Service.asmx"
+        //String URL = "http://localhost:8081/Service.asmx";
 
         private Dictionary<int, string> stateLUT;
 
@@ -28,57 +30,47 @@ namespace AssemblyLineManager.Warehouse
 
             return null;
         }
-        private static string RemoveAllNamespaces(string xmlDocument)
+        
+       private static HttpClient client = new HttpClient();
+       private static string pathToPost = @"C:\\Users\\kimje\\OneDrive\\Documents\\GitKraken\\4.-Semester-Projekt\\AssemblyLineManager.Warehouse\\Post.xml";
+       private static string fileForSC = File.ReadAllText(@pathToPost);
+       private static StringContent sc = new StringContent(fileForSC, Encoding.UTF8, "application/xml");
+      
+
+        public static async Task RunAsync()
         {
-            XElement xmlDocumentWithoutNs = RemoveAllNamespaces(XElement.Parse(xmlDocument));
-            return xmlDocumentWithoutNs.ToString();
+            client.BaseAddress = new Uri("http://localhost:8081");
+            client.DefaultRequestHeaders.Accept.Clear();
         }
 
-        public static XElement RemoveAllNamespaces(XElement xmlDocument)
-        {
-            if (!xmlDocument.HasElements)
+        public static async Task<string> GetInventoryAsync() {
+
+            string getRequest = "";
+            HttpResponseMessage response = await client.PostAsync("/Service.asmx", sc);
+            if (response.IsSuccessStatusCode)
             {
-                XElement xElement = new XElement(xmlDocument.Name.LocalName);
-                xElement.Value = xmlDocument.Value;
-
-                foreach (XAttribute attribute in xmlDocument.Attributes())
-                    xElement.Add(attribute);
-
-                return xElement;
+                getRequest = await response.Content.ReadAsStringAsync();
             }
-            return new XElement(xmlDocument.Name.LocalName, xmlDocument.Elements().Select(el => RemoveAllNamespaces(el)));
+            return getRequest;
         }
-       
-        using (HttpClient client = new HttpClient()) {
- 
-                    using (HttpResponseMessage res = await client.GetAsync(baseUrl))
-                    {
-                        
-                        using (HttpContent content = res.Content)
-                        {
-                            
-                            var data = await content.ReadAsStringAsync();
-                            
-                            if (data != null)
-                            {
-                            
-                                Console.WriteLine("data------------{0}", data);
-                            }
-                            else
-                            {
-                                Console.WriteLine("NO Data----------");
-                            }
-                        }
-                    }
-        }
-       static void Main(string[] args)
-        {
-            string path = "";
-            string message = File.ReadAllText(path);
 
-            /*XElement xmlWithNoNs = RemoveAllNamespaces(XElement.Parse(message));
-            var xmlDocuWithNoNs = xmlWithNoNs.ToString();*/
-            Console.WriteLine(message);
+        public static void rewriteXML(int trayID)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load(@"C:\Users\kimje\OneDrive\Documents\GitKraken\4.-Semester-Projekt\AssemblyLineManager.Warehouse\PickItem.xml");
+            XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
+            nsmgr.AddNamespace("s", "http://schemas.xmlsoap.org/soap/envelope/");
+            nsmgr.AddNamespace("m", "http://tempuri.org/");
+            XmlNode? trayIdNode = doc.SelectSingleNode("//s:Envelope/s:Body/m:PickItem/m:trayId", nsmgr);
+            if (trayIdNode?.Attributes != null)
+            {
+                string real = trayID.ToString();
+                trayIdNode.InnerText=real; // Update the id attribute value
+                Console.WriteLine(trayIdNode.OuterXml);
+                
+            }
+
+            doc.Save(@"C:\Users\kimje\OneDrive\Documents\GitKraken\4.-Semester-Projekt\AssemblyLineManager.Warehouse\PickItem.xml");
         }
 
     }
