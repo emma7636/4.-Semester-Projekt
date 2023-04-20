@@ -8,7 +8,7 @@ namespace AssemblyLineManager.Warehouse
 {
     public class Warehouse
     {
-        string URL = "http://localhost:8081/Service.asmx"
+        string URL = "http://localhost:8081/Service.asmx";
 
         private Dictionary<int, string> stateLUT;
 
@@ -24,17 +24,18 @@ namespace AssemblyLineManager.Warehouse
         { }
         private void InsertItem(int id, string name) // Method that sends command via SOAP to warehouse for inserting an item
         { }
-        private JsonArray? GetInventory() {
+        private JsonArray? GetInventory() //Method to get the inventory info
+        {
 
             return null;
         }
-        private static string RemoveAllNamespaces(string xmlDocument)
+        private static string RemoveAllNamespaces(string xmlDocument) //Removes all namespaces with a string
         {
             XElement xmlDocumentWithoutNs = RemoveAllNamespaces(XElement.Parse(xmlDocument));
             return xmlDocumentWithoutNs.ToString();
         }
 
-        public static XElement RemoveAllNamespaces(XElement xmlDocument)
+        public static XElement RemoveAllNamespaces(XElement xmlDocument) //Removes all namespaces with a xElement
         {
             if (!xmlDocument.HasElements)
             {
@@ -48,8 +49,21 @@ namespace AssemblyLineManager.Warehouse
             }
             return new XElement(xmlDocument.Name.LocalName, xmlDocument.Elements().Select(el => RemoveAllNamespaces(el)));
         }
-       
-        using (HttpClient client = new HttpClient()) {
+
+       static void Main(string[] args)
+        {
+            string path = "";
+            string message = File.ReadAllText(path);
+
+            /*XElement xmlWithNoNs = RemoveAllNamespaces(XElement.Parse(message));
+            var xmlDocuWithNoNs = xmlWithNoNs.ToString();*/
+            Console.WriteLine(message);
+        }
+
+    }
+}
+/*
+ * using (HttpClient client = new HttpClient()) {
  
                     using (HttpResponseMessage res = await client.GetAsync(baseUrl))
                     {
@@ -71,15 +85,4 @@ namespace AssemblyLineManager.Warehouse
                         }
                     }
         }
-       static void Main(string[] args)
-        {
-            string path = "";
-            string message = File.ReadAllText(path);
-
-            /*XElement xmlWithNoNs = RemoveAllNamespaces(XElement.Parse(message));
-            var xmlDocuWithNoNs = xmlWithNoNs.ToString();*/
-            Console.WriteLine(message);
-        }
-
-    }
-}
+*/
