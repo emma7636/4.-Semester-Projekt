@@ -11,7 +11,8 @@ namespace AssemblyLineManager.Warehouse
         static void Main(string[] args)
         {
             Warehouse.RunAsync().Wait();
-            Console.WriteLine(Warehouse.GetInventoryAsync());
+            Warehouse.PickItem(6).Wait();
+            Warehouse.InsertItem(6, "Marcus").Wait();
         }
 
     }

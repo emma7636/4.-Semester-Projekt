@@ -2,7 +2,7 @@
 <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <s:Body>
     <m:PickItem xmlns:m="http://tempuri.org/">
-      <m:trayId id="2">2</m:trayId>
+      <m:trayId>6</m:trayId>
     </m:PickItem>
   </s:Body>
 </s:Envelope>
