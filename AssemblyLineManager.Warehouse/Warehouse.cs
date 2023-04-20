@@ -55,7 +55,7 @@ namespace AssemblyLineManager.Warehouse
        private static HttpClient client = new HttpClient();
         private static StringContent SetSC(string XmlFileName)
         {
-            string pathToPost = @"C:\\Users\\kimje\\OneDrive\\Documents\\GitKraken\\4.-Semester-Projekt\\AssemblyLineManager.Warehouse\\"+XmlFileName;
+            string pathToPost = path+@"\"+XmlFileName;
             string fileForSC = File.ReadAllText(pathToPost);
             StringContent sc = new StringContent(fileForSC, Encoding.UTF8, "application/xml");
             return sc;
