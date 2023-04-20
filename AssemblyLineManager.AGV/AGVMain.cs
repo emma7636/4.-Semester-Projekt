@@ -1,6 +1,3 @@
-using System;
-using System.Threading.Tasks;
-
 namespace AssemblyLineManager.AGV
 {
     class Program
@@ -22,7 +19,7 @@ namespace AssemblyLineManager.AGV
             Console.WriteLine(loadProgramResult);
 
             // Execute the loaded program
-            global::System.Object value = Console.WriteLine("Executing program");
+            Console.WriteLine("Executing program");
             Console.WriteLine("Execute Program Result:");
             string executeProgramResult = await agvClient.ExecuteProgram();
             Console.WriteLine(executeProgramResult);
