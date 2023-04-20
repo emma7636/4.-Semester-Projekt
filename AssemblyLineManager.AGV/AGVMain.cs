@@ -1,11 +1,10 @@
-using System;
-using System.Threading.Tasks;
-
 namespace AssemblyLineManager.AGV
-{
-    class Program
+{ }
+
+/*s
+class Program
     {
-        static async Task Main(string[] args)
+        tatic async Task Main(string[] args)
         {
             AGVClient agvClient = new AGVClient();
 
@@ -28,4 +27,6 @@ namespace AssemblyLineManager.AGV
             Console.WriteLine(executeProgramResult);
         }
     }
+
 }
+        */
