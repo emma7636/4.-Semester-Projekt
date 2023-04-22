@@ -16,7 +16,7 @@ public partial class AssemblyStation
     {
         MqttApplicationMessage var = new MqttApplicationMessageBuilder()
         .WithTopic("emulator/operation")
-        .WithPayload($$"""\{\n\"ProcessID\": {{operation}}{operation}\n}""") //We have to manually create this JSON as the assembly station doesn't understand what the library spits out.
+        .WithPayload($"{{\n\"ProcessID\": {operation}\n}}") //We have to manually create this JSON as the assembly station doesn't understand what the library spits out.
         .WithPayloadFormatIndicator(MqttPayloadFormatIndicator.CharacterData)
         .WithContentType("schema:JSON")
         .WithAtLeastOnceQoS()
