@@ -1,4 +1,4 @@
-﻿using AssemblyLineManager.CommonLib;
+using AssemblyLineManager.CommonLib;
 using MQTTnet;
 
 namespace AssemblyLineManager.AssemblyStation;
@@ -50,9 +50,9 @@ public partial class AssemblyStation : ICommunicationController
                 return false;
             }
 
-            if (commandParameters!=null&&commandParameters.Length>0)
+            if (commandParameters!=null&&commandParameters.Length>0) //If the user wants to send a specific processID
             {
-                if (int.TryParse(commandParameters[0], out int process))
+                if (int.TryParse(commandParameters[0], out int process)) //Make sure the user actually entered a number
                 {
                     SendPayload(process).Wait(); //Send the command
                 }
