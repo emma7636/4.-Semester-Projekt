@@ -1,4 +1,4 @@
-using AssemblyLineManager.CommonLib;
+﻿using AssemblyLineManager.CommonLib;
 using MQTTnet;
 
 namespace AssemblyLineManager.AssemblyStation;
@@ -60,6 +60,10 @@ public partial class AssemblyStation : ICommunicationController
                 {
                     throw new ArgumentException("Please insert numerical values only for processID");
                 }
+            }
+            else
+            {
+                SendPayload(12345).Wait(); //Send the command with default numbering
             }
 
             while (_mqttClient.IsConnected) //Just in case we lose connection while waiting
