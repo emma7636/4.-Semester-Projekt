@@ -12,11 +12,11 @@ public partial class AssemblyStation
     private Status latestStatus = new Status();
     private CheckHealth? latestCheckHealth;
 
-    private async Task SendCommand()
+    private async Task SendPayload(int operation)
     {
         MqttApplicationMessage var = new MqttApplicationMessageBuilder()
         .WithTopic("emulator/operation")
-        .WithPayload("{\n\"ProcessID\": 12345\n}") //We have to manually create this JSON as the assembly station doesn't understand what the library spits out.
+        .WithPayload($$"""\{\n\"ProcessID\": {{operation}}{operation}\n}""") //We have to manually create this JSON as the assembly station doesn't understand what the library spits out.
         .WithPayloadFormatIndicator(MqttPayloadFormatIndicator.CharacterData)
         .WithContentType("schema:JSON")
         .WithAtLeastOnceQoS()

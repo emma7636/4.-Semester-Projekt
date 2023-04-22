@@ -46,7 +46,7 @@ namespace AssemblyLineManager.Tests
         [Test]
         public void AssemblyStationSendCommandTest()
         {
-
+            assemblyStation.SendCommand("name", "emulator/operator");
         }
     }
 }

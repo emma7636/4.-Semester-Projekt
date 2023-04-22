@@ -50,7 +50,17 @@ public partial class AssemblyStation : ICommunicationController
                 return false;
             }
 
-            SendCommand().Wait(); //Send the command
+            if (commandParameters!=null&&commandParameters.Length>0)
+            {
+                if (int.TryParse(commandParameters[0], out int process))
+                {
+                    SendPayload(process).Wait(); //Send the command
+                }
+                else
+                {
+                    throw new ArgumentException("Please insert numerical values only for processID");
+                }
+            }
 
             while (_mqttClient.IsConnected) //Just in case we lose connection while waiting
             {
