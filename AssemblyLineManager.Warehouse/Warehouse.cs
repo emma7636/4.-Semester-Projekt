@@ -15,6 +15,7 @@ namespace AssemblyLineManager.Warehouse
 
         private Dictionary<int, string> stateLUT;
         static string? path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        private static HttpClient client = new HttpClient();
         Warehouse()
         {
             // Not sure if this was what the dictionary was meant to be used as.
@@ -23,7 +24,14 @@ namespace AssemblyLineManager.Warehouse
             stateLUT.Add(1, "Executing");
             stateLUT.Add(2, "Error");
         }
-        public static async Task<String> PickItem(int id) // Method that sends command via SOAP to warehouse for picking an item
+        /**
+         * Sends a SOAP xml file to the warehouse and picks an item on the shelf with the same id
+         * 
+         * @param int id
+         * 
+         * @return Task<String>
+         */
+        public static async Task<String> PickItem(int id)
         {
             string xmlName = "PickItem.xml";
             RewriteXML(id, null, xmlName);
@@ -36,7 +44,15 @@ namespace AssemblyLineManager.Warehouse
             Console.WriteLine(postRequest);
             return postRequest;
         }
-        public static async Task<String> InsertItem(int id, string name) // Method that sends command via SOAP to warehouse for picking an item
+        /**
+         * Sends a SOAP xml file to the warehouse and inserts an item on the shelf with the same id
+         * 
+         * @param int id
+         * @param string name
+         * 
+         * @return Task<String>
+         */
+        public static async Task<String> InsertItem(int id, string name)
         {
             string xmlName = "PickItem.xml";
             RewriteXML(id, name, xmlName);
@@ -50,7 +66,13 @@ namespace AssemblyLineManager.Warehouse
             return postRequest;
         }
         
-        private static HttpClient client = new HttpClient();
+        /**
+         * Creates a StringContent object with the text of an xml file
+         *  
+         * @param string XmlFileName
+         * 
+         * @return StringContent sc
+         */
         private static StringContent SetSC(string XmlFileName)
         {
             string pathToPost = path+@"\"+XmlFileName;
@@ -58,13 +80,22 @@ namespace AssemblyLineManager.Warehouse
             StringContent sc = new StringContent(fileForSC, Encoding.UTF8, "application/xml");
             return sc;
         }
-       
+        
+
+        /**
+         * Connects to the simulation of the assembly line
+         */
         public static async Task RunAsync()
         {
             client.BaseAddress = new Uri("http://localhost:8081");
             client.DefaultRequestHeaders.Accept.Clear();
         }
 
+        /**
+         * Sends a SOAP XML command to the machine and gets back the inventory of the system
+         * 
+         * @return Task<string>
+         */
         public static async Task<string> GetInventoryAsync() {
 
             string getRequest = "";
@@ -77,6 +108,15 @@ namespace AssemblyLineManager.Warehouse
             return getRequest;
         }
         
+        /**
+         *  Rewrites the SOAP XML files and saves them at their location. Made generic for rewriting both insert and pick item
+         *  
+         *  @param int trayId
+         *  @param string? name
+         *  @param string xmlName
+         *  
+         */
+
         private static void RewriteXML(int trayId, string? name, string xmlName)
         {
             XmlDocument doc = new XmlDocument();
