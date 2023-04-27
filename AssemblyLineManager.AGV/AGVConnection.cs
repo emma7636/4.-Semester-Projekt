@@ -1,4 +1,4 @@
-﻿using AssemblyLineManager.CommonLib;
+using AssemblyLineManager.CommonLib;
 
 namespace AssemblyLineManager.AGV
 {
@@ -10,6 +10,8 @@ namespace AssemblyLineManager.AGV
 
         public AGVClient() => httpClient = new HttpClient();
 
+
+        //ICommunicationController methods implemented
         public KeyValuePair<string, string>[] GetState()
         {
             throw new NotImplementedException();
