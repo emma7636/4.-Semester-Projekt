@@ -28,6 +28,7 @@ public partial class AssemblyStation : ICommunicationController
 
     public KeyValuePair<string, string>[] GetState()
     {
+        //Generate a labeled array of the current state
         KeyValuePair<string, string>[] stateArray = new KeyValuePair<string, string>[4];
         stateArray[0] = new KeyValuePair<string, string>("lastOperation", latestStatus.LastOperation.ToString());
         stateArray[1] = new KeyValuePair<string, string>("currentOperation", latestStatus.CurrentOperation.ToString());
@@ -44,7 +45,7 @@ public partial class AssemblyStation : ICommunicationController
 
         if(command.Equals("emulator/operation")) //Checking what command they want us to send
         {
-            if (!_mqttClient.IsConnected)
+            if (!_mqttClient.IsConnected) //Checking we are connected
             {
                 Console.WriteLine("Connection to assembly station lost!");
                 return false;
@@ -78,7 +79,7 @@ public partial class AssemblyStation : ICommunicationController
                     }
                     Thread.Sleep(100);
                 }
-                return latestCheckHealth.IsHealthy;
+                return latestCheckHealth.IsHealthy; //Return the success of the assembled product
             }
 
             Console.WriteLine("Connection to assembly station lost!");

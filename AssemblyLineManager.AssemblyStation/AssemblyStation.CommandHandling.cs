@@ -8,12 +8,14 @@ namespace AssemblyLineManager.AssemblyStation;
 
 public partial class AssemblyStation
 {
+    //Storing the packets we receive so we can access them when needed
     private Echo? latestEcho;
     private Status latestStatus = new Status();
     private CheckHealth? latestCheckHealth;
 
     private async Task SendPayload(int operation)
     {
+        //Building a payload
         MqttApplicationMessage var = new MqttApplicationMessageBuilder()
         .WithTopic("emulator/operation")
         .WithPayload($"{{\n\"ProcessID\": {operation}\n}}") //We have to manually create this JSON as the assembly station doesn't understand what the library spits out.
@@ -21,9 +23,9 @@ public partial class AssemblyStation
         .WithContentType("schema:JSON")
         .WithAtLeastOnceQoS()
         .Build();
-        if (_mqttClient.IsConnected)
+        if (_mqttClient.IsConnected) //Checking we are connected
         {
-            await _mqttClient.PublishAsync(var);
+            await _mqttClient.PublishAsync(var); //Send the payload
         }
         else
         {
@@ -31,10 +33,11 @@ public partial class AssemblyStation
         }
     }
 
+    //A method used as a delegate for the MqttClient.Connected event
     private void MessageReceivedHandling(MqttApplicationMessageReceivedEventArgs e)
     {
         string json = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
-        switch (e.ApplicationMessage.Topic){
+        switch (e.ApplicationMessage.Topic){ //Checking what topic the message is from so we know how to handle it
             case "emulator/echo":
                 Console.WriteLine("echo");
                 Console.WriteLine(Encoding.UTF8.GetString(e.ApplicationMessage.Payload));
@@ -73,7 +76,7 @@ public partial class AssemblyStation
                 Console.WriteLine(Encoding.UTF8.GetString(e.ApplicationMessage.Payload));
                 Console.WriteLine("QoS: " + e.ApplicationMessage.QualityOfServiceLevel.ToString());
 
-                json = json[1..^1]; //This removes the quotation marks that seem to have been accidentally malplaced by the assembly station software.
+                json = json[1..^1]; //This removes the quotation marks that seem to have been accidentally malplaced by the assembly station simulator.
                 CheckHealth? newCheckHealth = JsonConvert.DeserializeObject<CheckHealth>(json);
                 if (newCheckHealth != null)
                 {
@@ -94,6 +97,7 @@ public partial class AssemblyStation
     }
 }
 
+//These classes are used to serialise/deserialise the JSON we receive from the assembly station simulator
 public class Operation
 {
     public int ProcessId { get; set; }

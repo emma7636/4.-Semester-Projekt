@@ -60,7 +60,7 @@ public partial class AssemblyStation
         var subscribeOptions = _mqttFactory.CreateSubscribeOptionsBuilder()
             .WithTopicFilter("emulator/status")
             .WithTopicFilter("emulator/checkhealth")
-            .WithTopicFilter("emulator/echo") //This isn't strictly necessary, but why not receive it?
+            .WithTopicFilter("emulator/echo") //This isn't strictly necessary, but it's a good idea
             .Build();
 
         await _mqttClient.SubscribeAsync(subscribeOptions);
