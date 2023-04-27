@@ -54,12 +54,19 @@ namespace AssemblyLineManager.Warehouse
             string xmlName = "PickItem.xml";
             RewriteXML(id, null, xmlName);
             string postRequest = "";
+            string result;
             HttpResponseMessage response = await client.PostAsync("/Service.asmx", SetSC(xmlName));
             if (response.IsSuccessStatusCode)
             {
                 postRequest = await response.Content.ReadAsStringAsync();
+                result = "Picked item with id: " + id;
+                return result;
             }
-            return postRequest;
+            else
+            {
+                result = "Failed to pick item";
+                return result;
+            }
         }
         /**
          * Sends a SOAP xml file to the warehouse and inserts an item on the shelf with the same id
@@ -76,7 +83,8 @@ namespace AssemblyLineManager.Warehouse
             string postRequest = "";
             string result;
             HttpResponseMessage response = await client.PostAsync("/Service.asmx", SetSC(xmlName));
-            if (response.IsSuccessStatusCode)
+            bool failChecker = InsertChecker(response);
+            if (failChecker)
             {
                 postRequest = await response.Content.ReadAsStringAsync();
                 result = "Inserted item " + name + " on " + id;
@@ -89,7 +97,27 @@ namespace AssemblyLineManager.Warehouse
             }
             
         }
-        
+        private static bool InsertChecker(HttpResponseMessage response)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load(response.Content.ReadAsStream());
+            XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
+            nsmgr.AddNamespace("s", "http://schemas.xmlsoap.org/soap/envelope/");
+            XmlNode? trayIdNode = doc.SelectSingleNode("//s:Envelope/s:Body", nsmgr);
+            if (trayIdNode?.InnerText != null)
+            {
+                string innerText;
+                innerText = trayIdNode.InnerText;
+                string fail = "Operation could not be handled. Check inventory status.";
+                if (innerText == fail)
+                {
+                    return false;
+                }
+
+            }
+
+            return true;
+        }
         /**
          * Creates a StringContent object with the text of an xml file
          *  

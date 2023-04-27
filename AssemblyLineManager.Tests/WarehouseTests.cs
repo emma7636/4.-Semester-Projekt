@@ -6,10 +6,15 @@ namespace AssemblyLineManager.Warehouse
 {
     public class WarehouseTests
     {
+        string result = "";
+        string expected = "";
+        string item = "Test Item";
+        int id = 1;
         [SetUp]
         public void Setup()
         {
             Warehouse.RunAsync().Wait();
+            Warehouse.PickItem(1).Wait();
         }
         [Test]
         public void GetConnected_Connect_ReturnTrue()
@@ -17,22 +22,26 @@ namespace AssemblyLineManager.Warehouse
             Assert.IsTrue(Warehouse.Connected);
         }
         [Test]
-        public void PickItem_ReceivedPickOperation_ReturnTrue()
+        public void PickItem_PickedItem_ReturnTrue()
         {
-            Assert.AreSame("Inserted item Test Item on 1" , Warehouse.PickItem(1));
+            result = Warehouse.PickItem(id).Result;
+            expected = "Picked item with id: " + id;
+            StringAssert.Contains(expected, result);
         }
         [Test]
-        public void InsertItem_ReceivedInsertOperation_ReturnTrue()
-        {   //Jeg fandt ud af hvordan vi får en string ud som return type i stedet for en eller anden Thread
-            //DEN PASSER :CUM:
-            string result = Warehouse.InsertItem(1, "Test Item").Result;
-            string expected = "Inserted item Test Item on 1";
-            Assert.IsTrue(expected == result);
+        public void InsertItem_InsertedItem_ReturnTrue()
+        {
+            result = Warehouse.InsertItem(id, item).Result;
+            expected = "Inserted item "+ item + " on " + id;
+            StringAssert.Contains(expected, result);
         }
         [Test]
-        public void InsertItem_InsertItemOutOfBound_ReturnTrue(int trayId, string name)
+        public void InsertItem_InsertItemOutOfBound_ReturnTrue()
         { //Planen er at se hvad der sker hvis man prøver at indsætte item på en plads der ikke er plads til i Inventory
-            Assert.AreSame("What returned here?", Warehouse.InsertItem(trayId, name).Result);
+            Warehouse.InsertItem(id, item).Wait();
+            result = Warehouse.InsertItem(id, item).Result;
+            expected = "Failed to insert item";
+            StringAssert.Contains(expected, result);
         }
 
         [Test]
