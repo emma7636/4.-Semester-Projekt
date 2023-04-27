@@ -40,7 +40,7 @@
 		<Pack>True</Pack>
 		<PackagePath>\</PackagePath>
 	</None>
-    <PackageReference Include="AssemblyLineManager.CommonLib" Version="1.1.1" />
+    <PackageReference Include="AssemblyLineManager.CommonLib" Version="1.2.0" />
   </ItemGroup>
 
 </Project>
