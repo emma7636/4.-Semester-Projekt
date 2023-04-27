@@ -6,9 +6,21 @@ using System;
 using System.Text;
 using System.Xml;
 using System.Reflection;
+using Newtonsoft.Json.Linq;
+using System.Threading.Tasks.Dataflow;
 
 namespace AssemblyLineManager.Warehouse
 {
+    public class Item
+    {
+        public int Id { get; set; }
+        public string Content { get; set; }
+        public Item (int id, string content)
+        {
+            this.Id = id;
+            this.Content = content;
+        }
+    }
     public class Warehouse
     {
         //String URL = "http://localhost:8081/Service.asmx";
@@ -16,6 +28,7 @@ namespace AssemblyLineManager.Warehouse
         private Dictionary<int, string> stateLUT;
         static string? path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         private static HttpClient client = new HttpClient();
+        private static bool connected = false;
         Warehouse()
         {
             // Not sure if this was what the dictionary was meant to be used as.
@@ -23,6 +36,11 @@ namespace AssemblyLineManager.Warehouse
             stateLUT.Add(0, "Idle");
             stateLUT.Add(1, "Executing");
             stateLUT.Add(2, "Error");
+        }
+        public static bool Connected
+        {
+            get { return connected; }
+            set { connected = value; }
         }
         /**
          * Sends a SOAP xml file to the warehouse and picks an item on the shelf with the same id
@@ -41,7 +59,6 @@ namespace AssemblyLineManager.Warehouse
             {
                 postRequest = await response.Content.ReadAsStringAsync();
             }
-            Console.WriteLine(postRequest);
             return postRequest;
         }
         /**
@@ -52,18 +69,25 @@ namespace AssemblyLineManager.Warehouse
          * 
          * @return Task<String>
          */
-        public static async Task<String> InsertItem(int id, string name)
+        public static async Task<string> InsertItem(int id, string name)
         {
-            string xmlName = "PickItem.xml";
+            string xmlName = "InsertItem.xml";
             RewriteXML(id, name, xmlName);
             string postRequest = "";
+            string result;
             HttpResponseMessage response = await client.PostAsync("/Service.asmx", SetSC(xmlName));
             if (response.IsSuccessStatusCode)
             {
                 postRequest = await response.Content.ReadAsStringAsync();
+                result = "Inserted item " + name + " on " + id;
+                return result;
             }
-            Console.WriteLine(postRequest);
-            return postRequest;
+            else
+            {
+                result = "Failed to insert item";
+                return result;
+            }
+            
         }
         
         /**
@@ -89,6 +113,8 @@ namespace AssemblyLineManager.Warehouse
         {
             client.BaseAddress = new Uri("http://localhost:8081");
             client.DefaultRequestHeaders.Accept.Clear();
+            Warehouse.Connected = true;
+            
         }
 
         /**
@@ -104,7 +130,6 @@ namespace AssemblyLineManager.Warehouse
             {
                 getRequest = await response.Content.ReadAsStringAsync();
             }
-            Console.WriteLine(getRequest);
             return getRequest;
         }
         
@@ -140,11 +165,35 @@ namespace AssemblyLineManager.Warehouse
                 nameNode.InnerText = name;
                 Console.WriteLine(insertTrayIdNode.OuterXml);
                 Console.WriteLine(nameNode.OuterXml);
-                
             }
 
             doc.Save(path+@"\"+xmlName);
         }
+        private static async Task<HttpResponseMessage> SendGetInventory()
+        {
+            HttpResponseMessage response = await client.PostAsync("/Service.asmx", SetSC("GetInventory.xml"));
+            return response;
+        }
+        public static void GetInventory()
+        {
+            HttpResponseMessage response = SendGetInventory().Result;
+            XmlDocument doc = new XmlDocument();
+            doc.Load(response.Content.ReadAsStream());
+            XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
+            nsmgr.AddNamespace("s", "http://schemas.xmlsoap.org/soap/envelope/");
+            XmlNode? trayIdNode = doc.SelectSingleNode("//s:Envelope/s:Body", nsmgr);
+            if (trayIdNode?.InnerText != null)
+            {
+                string innerText;
+                innerText = trayIdNode.InnerText;
+                dynamic? json = JObject.Parse(innerText);
+                JArray? array = (JArray)json["Inventory"];
+                foreach (JObject obj in array ) {
+                    
+                }
+                
+            }
 
+        }
     }
 }
