@@ -1,0 +1,28 @@
+.body {
+    margin: 0%;
+}
+
+#button_group {
+    position: absolute;
+    left: 25%;
+    top: 50%;
+    width: 50%;
+    height: 10%;
+    margin-left: -10px;
+    margin-top: -10px;
+    border: 3px solid green;
+}
+
+#button_group button{
+    width: 20%;
+    height: 100%;
+}
+
+#button_group a {
+    display: block;
+    text-align: center;
+    width: 18%;
+    line-height: 100%;
+    float: right;
+    text-decoration: none;
+}
