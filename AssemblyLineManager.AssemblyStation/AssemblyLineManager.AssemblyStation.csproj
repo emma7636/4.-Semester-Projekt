@@ -21,7 +21,7 @@
 		<Pack>True</Pack>
 		<PackagePath>\</PackagePath>
 	</None>
-	<PackageReference Include="AssemblyLineManager.CommonLib" Version="1.1.1" />
+	<PackageReference Include="AssemblyLineManager.CommonLib" Version="1.2.1" />
 	<PackageReference Include="MQTTnet" Version="4.1.4.563" />
   </ItemGroup>
 
