@@ -1,0 +1,20 @@
+#wrapper {
+    overflow: hidden;
+}
+
+.mci {
+    margin-left: 1%;
+    margin-right: 1%;
+    border: 3px solid green;
+    width: 30%;
+    float: left;
+}
+
+.mci > *{
+    padding-left: 2%;
+    
+}
+
+h1 {
+    text-align: center;
+}
