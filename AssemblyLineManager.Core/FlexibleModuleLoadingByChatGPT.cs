@@ -1,12 +1,11 @@
-﻿/*
-    Author: ChatGPT
-*/
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
+/// <summary>
+/// Author: ChatGPT
+/// </summary>
 public interface IAnimal
 {
     void Speak();
