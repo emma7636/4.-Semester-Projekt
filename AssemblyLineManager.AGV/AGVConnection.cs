@@ -8,8 +8,14 @@ namespace AssemblyLineManager.AGV
         private readonly HttpClient httpClient;
         private readonly string baseUrl = "http://localhost:8082/v1/status/";
 
+
         public AGVClient() => httpClient = new HttpClient();
 
+        // Constructor that accepts an HttpClient parameter
+        public AGVClient(HttpClient httpClient)
+        {
+            this.httpClient = httpClient;
+        }
 
         //ICommunicationController methods implemented
         public KeyValuePair<string, string>[] GetState()
