@@ -34,7 +34,7 @@ namespace AssemblyLineManager.Warehouse
         static string? path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         private static HttpClient client = new HttpClient();
         private static bool connected = false;
-        Warehouse()
+        public Warehouse()
         {
             // Not sure if this was what the dictionary was meant to be used as.
             stateLUT = new Dictionary<int, string>();
@@ -100,7 +100,7 @@ namespace AssemblyLineManager.Warehouse
                 result = "Failed to insert item";
                 return result;
             }
-            
+
         }
         private static bool InsertChecker(HttpResponseMessage response)
         {
@@ -132,12 +132,12 @@ namespace AssemblyLineManager.Warehouse
          */
         private static StringContent SetSC(string XmlFileName)
         {
-            string pathToPost = path+@"\"+XmlFileName;
+            string pathToPost = path + @"\" + XmlFileName;
             string fileForSC = File.ReadAllText(pathToPost);
             StringContent sc = new StringContent(fileForSC, Encoding.UTF8, "application/xml");
             return sc;
         }
-        
+
 
         /**
          * Connects to the simulation of the assembly line
@@ -147,7 +147,7 @@ namespace AssemblyLineManager.Warehouse
             client.BaseAddress = new Uri("http://localhost:8081");
             client.DefaultRequestHeaders.Accept.Clear();
             Warehouse.Connected = true;
-            
+
         }
 
         /**
@@ -155,7 +155,8 @@ namespace AssemblyLineManager.Warehouse
          * 
          * @return Task<string>
          */
-        public static async Task<string> GetInventoryWithStatus() {
+        public static async Task<string> GetInventoryWithStatus()
+        {
 
             string getRequest = "";
             HttpResponseMessage response = await client.PostAsync("/Service.asmx", SetSC("GetInventory.xml"));
@@ -165,7 +166,7 @@ namespace AssemblyLineManager.Warehouse
             }
             return getRequest;
         }
-        
+
         /**
          *  Rewrites the SOAP XML files and saves them at their location. Made generic for rewriting both insert and pick item
          *  
@@ -175,11 +176,10 @@ namespace AssemblyLineManager.Warehouse
          *  
          *  @return void
          */
-
         private static void RewriteXML(int trayId, string? name, string xmlName)
         {
             XmlDocument doc = new XmlDocument();
-            doc.Load(path+@"\"+xmlName);
+            doc.Load(path + @"\" + xmlName);
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
             nsmgr.AddNamespace("s", "http://schemas.xmlsoap.org/soap/envelope/");
             nsmgr.AddNamespace("m", "http://tempuri.org/");
@@ -189,19 +189,19 @@ namespace AssemblyLineManager.Warehouse
             if (pickTrayIdNode?.InnerText != null)
             {
                 string real = trayId.ToString();
-                pickTrayIdNode.InnerText=real; // Update the id attribute value
+                pickTrayIdNode.InnerText = real; // Update the id attribute value
                 Console.WriteLine(pickTrayIdNode.OuterXml);
             }
-            if (insertTrayIdNode?.InnerText != null && name !=null && nameNode?.InnerText !=null)
+            if (insertTrayIdNode?.InnerText != null && name != null && nameNode?.InnerText != null)
             {
                 string real = trayId.ToString();
-                insertTrayIdNode.InnerText=real;
+                insertTrayIdNode.InnerText = real;
                 nameNode.InnerText = name;
                 Console.WriteLine(insertTrayIdNode.OuterXml);
                 Console.WriteLine(nameNode.OuterXml);
             }
 
-            doc.Save(path+@"\"+xmlName);
+            doc.Save(path + @"\" + xmlName);
         }
         private static async Task<HttpResponseMessage> SendGetInventory()
         {
@@ -210,34 +210,21 @@ namespace AssemblyLineManager.Warehouse
         }
         private static ArrayList GetInventoryList()
         {
-            HttpResponseMessage response = SendGetInventory().Result;
-            XmlDocument doc = new XmlDocument();
-            doc.Load(response.Content.ReadAsStream());
-            XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
-            nsmgr.AddNamespace("s", "http://schemas.xmlsoap.org/soap/envelope/");
-            XmlNode? trayIdNode = doc.SelectSingleNode("//s:Envelope/s:Body", nsmgr);
-            if (trayIdNode?.InnerText != null)
+            dynamic dyna = IterateInventory();
+            JArray? array = (JArray)dyna["Inventory"];
+            //Console.WriteLine(array);
+            ArrayList ItemList = new ArrayList();
+            foreach (JObject obj in array.Cast<JObject>())
             {
-                string innerText;
-                innerText = trayIdNode.InnerText;
-                dynamic? json = JObject.Parse(innerText);
-                JArray? array = (JArray)json["Inventory"];
-                //Console.WriteLine(array);
-                ArrayList ItemList= new ArrayList();
-                foreach (JObject obj in array.Cast<JObject>()) {
-                    int? id = (int?)obj["Id"];
-                    string? content = (string?)obj["Content"];
-                    if (content != null && id !=null)
-                    {
-                        Item newItem = new Item(id.Value, content);
-                        ItemList.Add(newItem);
-                    }
-
+                int? id = (int?)obj["Id"];
+                string? content = (string?)obj["Content"];
+                if (content != null && id != null)
+                {
+                    Item newItem = new Item(id.Value, content);
+                    ItemList.Add(newItem);
                 }
-                return ItemList;
             }
-            ArrayList list = new ArrayList();
-            return list;
+            return ItemList;
         }
 
         public static Item GetInventoryItem(int id)
@@ -267,13 +254,41 @@ namespace AssemblyLineManager.Warehouse
             List<KeyValuePair<int, string>> inventory = new List<KeyValuePair<int, string>>();
             foreach (Item item in list)
             {
-                inventory.Add(new KeyValuePair<int, string>(item.Id,item.Content));
+                inventory.Add(new KeyValuePair<int, string>(item.Id, item.Content));
             }
             //KeyValuePair<int, string>[] newInventory = inventory.ToArray();
 
             return inventory.ToArray();
         }
-            
+        public KeyValuePair<string, string>[] GetState()
+        {
+            dynamic dyna = IterateInventory();
+            int? array = (int)dyna["State"];
+            Console.WriteLine(array);
+
+            return new KeyValuePair<string, string>[1];
+        }
+        public bool SendCommand(string machineName, string command, string[]? commandParameters = null)
+        {
+            return true;
+        }
+
+        private static dynamic IterateInventory()
+        {
+            HttpResponseMessage response = SendGetInventory().Result;
+            XmlDocument doc = new XmlDocument();
+            doc.Load(response.Content.ReadAsStream());
+            XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
+            nsmgr.AddNamespace("s", "http://schemas.xmlsoap.org/soap/envelope/");
+            XmlNode? trayIdNode = doc.SelectSingleNode("//s:Envelope/s:Body", nsmgr);
+            if (trayIdNode?.InnerText != null)
+            {
+                string innerText;
+                innerText = trayIdNode.InnerText;
+                dynamic? dyna = JObject.Parse(innerText);
+                return dyna;
+            }
+            return "";
         }
     }
 }

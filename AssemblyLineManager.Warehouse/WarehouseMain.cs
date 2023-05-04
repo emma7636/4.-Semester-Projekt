@@ -14,6 +14,8 @@ namespace AssemblyLineManager.Warehouse
             //Warehouse.PickItem(7).Wait();
             //Console.WriteLine(Warehouse.InsertItem(7, "Marcus").Result);
             Console.WriteLine(Warehouse.GetInventoryItem(7));
+            Warehouse warehouse = new Warehouse();
+            warehouse.GetState();
         } 
 
     }
