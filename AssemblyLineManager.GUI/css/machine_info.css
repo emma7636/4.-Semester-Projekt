@@ -1,18 +1,20 @@
 #wrapper {
-    overflow: hidden;
+    display: flex;
+    justify-content: center;
 }
 
 .mci {
     margin-left: 1%;
     margin-right: 1%;
-    border: 3px solid green;
-    width: 30%;
+    background-color: rgb(237, 237, 237);
+    border: 3px solid rgb(208, 208, 208);
+    width: 17%;
     float: left;
 }
 
-.mci > *{
+.mci>* {
     padding-left: 2%;
-    
+
 }
 
 h1 {
