@@ -8,6 +8,8 @@ using System.Xml;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks.Dataflow;
+using System.Collections;
+using System.Security.Cryptography;
 
 namespace AssemblyLineManager.Warehouse
 {
@@ -19,6 +21,10 @@ namespace AssemblyLineManager.Warehouse
         {
             this.Id = id;
             this.Content = content;
+        }
+        public override string ToString()
+        {
+            return "Id: " + Id + " Content: " + Content;
         }
     }
     public class Warehouse
@@ -150,7 +156,7 @@ namespace AssemblyLineManager.Warehouse
          * 
          * @return Task<string>
          */
-        public static async Task<string> GetInventoryAsync() {
+        public static async Task<string> GetInventoryWithStatus() {
 
             string getRequest = "";
             HttpResponseMessage response = await client.PostAsync("/Service.asmx", SetSC("GetInventory.xml"));
@@ -202,7 +208,7 @@ namespace AssemblyLineManager.Warehouse
             HttpResponseMessage response = await client.PostAsync("/Service.asmx", SetSC("GetInventory.xml"));
             return response;
         }
-        public static void GetInventory()
+        private static ArrayList GetInventoryList()
         {
             HttpResponseMessage response = SendGetInventory().Result;
             XmlDocument doc = new XmlDocument();
@@ -216,12 +222,44 @@ namespace AssemblyLineManager.Warehouse
                 innerText = trayIdNode.InnerText;
                 dynamic? json = JObject.Parse(innerText);
                 JArray? array = (JArray)json["Inventory"];
-                foreach (JObject obj in array ) {
-                    
-                }
-                
-            }
+                //Console.WriteLine(array);
+                ArrayList ItemList= new ArrayList();
+                foreach (JObject obj in array.Cast<JObject>()) {
+                    int? id = (int?)obj["Id"];
+                    string? content = (string?)obj["Content"];
+                    if (content != null && id !=null)
+                    {
+                        Item newItem = new Item(id.Value, content);
+                        ItemList.Add(newItem);
+                    }
 
+                }
+                return ItemList;
+            }
+            ArrayList list = new ArrayList();
+            return list;
+        }
+
+        public static Item GetInventoryItem(int id)
+        {
+            id--;
+            ArrayList ItemList = GetInventoryList();
+            Item? item;
+            Item defaultItem = new Item(11, "Error");
+            if (ItemList[id] != null)
+            {
+                item = (Item?)ItemList[id];
+                if (item != null)
+                {
+                    return item;
+                }
+            }
+            return defaultItem;
+        }
+        public static int GetInventoryCount()
+        {
+            ArrayList list = GetInventoryList();
+            return list.Count;
         }
     }
 }
