@@ -7,9 +7,8 @@ using System.Text;
 using System.Xml;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
-using System.Threading.Tasks.Dataflow;
 using System.Collections;
-using System.Security.Cryptography;
+using AssemblyLineManager.CommonLib;
 
 namespace AssemblyLineManager.Warehouse
 {
@@ -27,7 +26,7 @@ namespace AssemblyLineManager.Warehouse
             return "Id: " + Id + " Content: " + Content;
         }
     }
-    public class Warehouse
+    public class Warehouse : ICommunicationControllerWithInventory
     {
         //String URL = "http://localhost:8081/Service.asmx";
 
@@ -174,6 +173,7 @@ namespace AssemblyLineManager.Warehouse
          *  @param string? name
          *  @param string xmlName
          *  
+         *  @return void
          */
 
         private static void RewriteXML(int trayId, string? name, string xmlName)
@@ -260,6 +260,20 @@ namespace AssemblyLineManager.Warehouse
         {
             ArrayList list = GetInventoryList();
             return list.Count;
+        }
+        public KeyValuePair<int, string>[] GetInventory()
+        {
+            ArrayList list = GetInventoryList();
+            List<KeyValuePair<int, string>> inventory = new List<KeyValuePair<int, string>>();
+            foreach (Item item in list)
+            {
+                inventory.Add(new KeyValuePair<int, string>(item.Id,item.Content));
+            }
+            //KeyValuePair<int, string>[] newInventory = inventory.ToArray();
+
+            return inventory.ToArray();
+        }
+            
         }
     }
 }
