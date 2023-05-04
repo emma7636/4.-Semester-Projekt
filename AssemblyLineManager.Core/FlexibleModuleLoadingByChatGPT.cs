@@ -29,7 +29,7 @@ public class Cat : IAnimal
 
 class Program
 {
-    static void Main(string[] args)
+    /*static void Main(string[] args)
     {/*
         // Create a list of objects that implement the IAnimal interface
         var animals = new List<IAnimal>();
@@ -40,7 +40,7 @@ class Program
         foreach (var animal in animals)
         {
             animal.Speak();
-        }*/
+        }
         
         // Alternatively, you can use reflection to get a list of all available implementations of the interface
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -52,5 +52,5 @@ class Program
         {
             instance.Speak();
         }
-    }
+    }*/
 }
