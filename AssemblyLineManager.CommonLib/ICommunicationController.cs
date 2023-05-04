@@ -2,7 +2,7 @@
 {
     public interface ICommunicationController
     {
-        public KeyValuePair<int, string> GetState();
+        public KeyValuePair<string, string> GetState();
 
         public bool SendCommand(string machineName, string command, string[]? commandParameters = null);
     }

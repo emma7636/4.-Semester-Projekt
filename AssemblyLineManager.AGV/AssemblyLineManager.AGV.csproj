@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -21,7 +21,7 @@
 	    <Pack>True</Pack>
 		<PackagePath>\</PackagePath>
 	</None>
-    <PackageReference Include="AssemblyLineManager.CommonLib" Version="1.2.0" />
+    <PackageReference Include="AssemblyLineManager.CommonLib" Version="1.2.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
