@@ -50,21 +50,6 @@ namespace AssemblyLineManager.AGV
                 Console.WriteLine("Dictionary was null + \n");
                 return new KeyValuePair<string, string>[1]{ new KeyValuePair<string, string>("Error", "Could not connect") };  // Tomt array eller kast en fejl
             }
-
-            /*Console.WriteLine("Reader Solution\n");
-            using (var reader = new JsonTextReader(new StringReader(status)))
-            {
-                
-                for (int i = 0; i<4; i++)
-                { 
-                    list[i] = new KeyValuePair<string, string>("" + reader.TokenType, "" + reader.Value);
-                    Console.WriteLine(reader.TokenType + " " + reader.Value);
-                    //Console.WriteLine(list[i]);
-                }
-                
-            }
-            return dict.ToList();
-            */
         }
 
         public bool SendCommand(string machineName, string command, string[]? commandParameters = null)
@@ -121,17 +106,6 @@ namespace AssemblyLineManager.AGV
             {
                 return false;
             }
-            //Hvis command = execute => execute
-            // ellers gør så metoden behandler commandoen. 
-            /* Commands:
-             * MoveToChargerOperation
-             * MoveToAssemblyOperation
-             * MoveToStorageOperation
-             * PutAssemblyOperation
-             * PickAssemblyOperation
-             * PickWarehouseOperation
-             * PutWarehouseOperation
-             */
         }
     }
 }
