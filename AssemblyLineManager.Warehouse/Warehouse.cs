@@ -9,6 +9,7 @@ using System.Reflection;
 using Newtonsoft.Json.Linq;
 using System.Collections;
 using AssemblyLineManager.CommonLib;
+using System.Reflection.Metadata;
 
 namespace AssemblyLineManager.Warehouse
 {
@@ -54,7 +55,7 @@ namespace AssemblyLineManager.Warehouse
          * 
          * @return Task<String>
          */
-        public static async Task<String> PickItem(int id)
+        public static async Task<string> PickItem(int id)
         {
             string xmlName = "PickItem.xml";
             RewriteXML(id, null, xmlName);
@@ -203,16 +204,25 @@ namespace AssemblyLineManager.Warehouse
 
             doc.Save(path + @"\" + xmlName);
         }
+        /**
+         * Sends the GetInventory post command to the server
+         * 
+         * @return Task<HttpResponseMessage>
+         */
         private static async Task<HttpResponseMessage> SendGetInventory()
         {
             HttpResponseMessage response = await client.PostAsync("/Service.asmx", SetSC("GetInventory.xml"));
             return response;
         }
+        /**
+         * Gets the list of items in the inventory, makes them into Item objects and creates a List of them
+         * 
+         * @return ArrayList
+         */
         private static ArrayList GetInventoryList()
         {
             dynamic dyna = IterateInventory();
             JArray? array = (JArray)dyna["Inventory"];
-            //Console.WriteLine(array);
             ArrayList ItemList = new ArrayList();
             foreach (JObject obj in array.Cast<JObject>())
             {
@@ -227,6 +237,12 @@ namespace AssemblyLineManager.Warehouse
             return ItemList;
         }
 
+        /**
+         * Gets a specific item from the inventory, returns an error item if there's an error
+         * 
+         * @params int id
+         * @return Item
+         */
         public static Item GetInventoryItem(int id)
         {
             id--;
@@ -243,11 +259,22 @@ namespace AssemblyLineManager.Warehouse
             }
             return defaultItem;
         }
+        /**
+         * Shows how many items in the inventory
+         * 
+         * @return int
+         */
         public static int GetInventoryCount()
         {
             ArrayList list = GetInventoryList();
             return list.Count;
         }
+
+        /**
+         * Creates a KeyValuePair array for the inventory so it can be sent to the front end.
+         * 
+         * @return KeyValuePair<int, string>
+         */
         public KeyValuePair<int, string>[] GetInventory()
         {
             ArrayList list = GetInventoryList();
@@ -260,19 +287,52 @@ namespace AssemblyLineManager.Warehouse
 
             return inventory.ToArray();
         }
+        /**
+         * Creates a KeyValuePair array for the state of the machine so it can be sent to the front end
+         * 
+         * @return KeyValuePair<string, string>
+         */
         public KeyValuePair<string, string>[] GetState()
         {
             dynamic dyna = IterateInventory();
-            int? array = (int)dyna["State"];
-            Console.WriteLine(array);
-
-            return new KeyValuePair<string, string>[1];
+            int state = (int)dyna["State"];
+            List<KeyValuePair<string, string>> stateList = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("State: ", state.ToString())
+            };
+            return stateList.ToArray();
         }
+        /**
+         * Sends commands to the machine from the front end
+         * 
+         * @param string machineName, string command, string[]? commandParameters = null
+         * @return bool
+         */
         public bool SendCommand(string machineName, string command, string[]? commandParameters = null)
         {
-            return true;
+            if (commandParameters != null) {
+                int itemId = Int32.Parse(commandParameters[0]);
+                if (command == "Pick Item")
+                {
+                   PickItem(itemId).Wait();
+                   return true;
+                    
+                }
+                else if (command == "Insert Item")
+                {
+                    string itemName = commandParameters[1];
+                    InsertItem(itemId,itemName).Wait();
+                    return true;
+                }
+            }
+            return false;
         }
 
+        /**
+         * Iterates through the inventory SOAP XML to find specific values
+         * 
+         * @return dynamic
+         */
         private static dynamic IterateInventory()
         {
             HttpResponseMessage response = SendGetInventory().Result;

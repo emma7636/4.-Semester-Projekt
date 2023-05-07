@@ -13,9 +13,11 @@ namespace AssemblyLineManager.Warehouse
             Warehouse.RunAsync().Wait();
             //Warehouse.PickItem(7).Wait();
             //Console.WriteLine(Warehouse.InsertItem(7, "Marcus").Result);
-            Console.WriteLine(Warehouse.GetInventoryItem(7));
+            
             Warehouse warehouse = new Warehouse();
-            warehouse.GetState();
+            string[] commands = { "1", "Test Item" };
+            warehouse.SendCommand("Warehouse", "Insert Item", commands);
+            //warehouse.GetState();
         } 
 
     }

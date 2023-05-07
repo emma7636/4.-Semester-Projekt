@@ -14,7 +14,7 @@ namespace AssemblyLineManager.Warehouse
         [SetUp]
         public void Setup()
         {
-            
+          
         }
         [Test]
         public void GetConnected_Connect_ReturnTrue()
@@ -62,6 +62,30 @@ namespace AssemblyLineManager.Warehouse
             int result = Warehouse.GetInventoryCount();
             int expected = 10;
             Assert.AreEqual(expected, result);
+        }
+        [Test]
+        public void SendCommand_SendsTheCommand_ReturnsTrue()
+        {
+            Warehouse.RunAsync().Wait();
+            string[] commands = { "1", "Test Item" };
+            Warehouse warehouse = new Warehouse();
+            bool shouldBeTrue = warehouse.SendCommand("Warehouse", "Insert Item", commands);
+            Assert.IsTrue(shouldBeTrue);
+        }
+        [Test]
+        public void GetState_IdleState_ReturnsTrue()
+        {
+            // HELP I DONT KNOW HOW TO TEST THIS.
+            Warehouse.RunAsync().Wait();
+            Warehouse warehouse = new Warehouse();
+            List<KeyValuePair<string, string>> expectedList = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("State: ", "0")
+            };
+            KeyValuePair<string, string>[] expected = expectedList.ToArray();
+            KeyValuePair<string, string>[] result = warehouse.GetState();
+
+           
         }
     }
 }
