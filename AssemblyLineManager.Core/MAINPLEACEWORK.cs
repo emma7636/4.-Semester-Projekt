@@ -12,6 +12,6 @@ internal class MAINPLEACEWORK
 {
     public static void Main(String[] args)
     {
-        
+        Core core = new Core();
     }
 }

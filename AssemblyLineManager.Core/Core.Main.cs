@@ -15,6 +15,14 @@ public partial class Core
     public Core()
     {
         LoadModules();
+        /*foreach (var instance in instances)
+        {
+            Console.WriteLine(instance.GetState().ToString());
+            if (instance is ICommunicationControllerWithInventory)
+            {
+                Console.WriteLine("woohoo");
+            }
+        }*/
     }
 
     static void LoadModules()
