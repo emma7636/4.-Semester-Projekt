@@ -31,5 +31,5 @@ public interface ICommunicationController
     /// <param name="command">command is the name of the command to be sent.</param>
     /// <param name="commandParameters">The commandParameters is an array of strings that the module can use however it wants to receive additional information to sent along with the command.</param>
     /// <returns>Returns a boolean describing success or failure of the operation attempted</returns>
-    public bool SendCommand(string machineName, string command, string[]? commandParameters = null);
+    public bool SendCommand(string command, string[]? commandParameters = null);
 }

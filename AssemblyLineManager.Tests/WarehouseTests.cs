@@ -23,8 +23,8 @@ namespace AssemblyLineManager.Warehouse
         public void SendCommand_SendsTheCommand_ReturnsTrue()
         {
             string[] commands = { "1", "Test Item" };
-            warehouse.SendCommand("Warehouse", "Pick Item", commands);
-            bool shouldBeTrue = warehouse.SendCommand("Warehouse", "Insert Item", commands);
+            warehouse.SendCommand("Pick Item", commands);
+            bool shouldBeTrue = warehouse.SendCommand("Insert Item", commands);
             Assert.IsTrue(shouldBeTrue);
         }
         [Test]

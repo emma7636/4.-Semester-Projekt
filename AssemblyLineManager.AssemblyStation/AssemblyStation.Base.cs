@@ -45,7 +45,7 @@ public partial class AssemblyStation : ICommunicationController
         return stateArray;
     }
 
-    public bool SendCommand(string machineName, string command, string[]? commandParameters = null)
+    public bool SendCommand(string command, string[]? commandParameters = null)
     {
         //Deleting old data so we don't get confused
         latestEcho = null;

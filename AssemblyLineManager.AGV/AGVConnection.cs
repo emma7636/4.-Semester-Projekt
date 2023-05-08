@@ -60,7 +60,7 @@ namespace AssemblyLineManager.AGV
             }
         }
 
-        public bool SendCommand(string machineName, string command, string[]? commandParameters = null)
+        public bool SendCommand(string command, string[]? commandParameters = null)
         {
             //This ifelse statement is not needed currently but as we redesign the code it may be useful should we implement further criteria for the command argument
             AGVClient agvClient = new AGVClient();
@@ -92,7 +92,7 @@ namespace AssemblyLineManager.AGV
                         response = moveCharge.Result;
                         if (response != null)
                         {
-                            return SendCommand("name","execute");
+                            return SendCommand("execute");
                         }
                         return false;
 
@@ -103,7 +103,7 @@ namespace AssemblyLineManager.AGV
                         response = moveAssemb.Result;
                         if (response != null)
                         {
-                            return SendCommand("name", "execute");
+                            return SendCommand("execute");
                         }
                         return false;
 
@@ -114,7 +114,7 @@ namespace AssemblyLineManager.AGV
                         response = moveWare.Result;
                         if (response != null)
                         {
-                            return SendCommand("name", "execute");
+                            return SendCommand("execute");
                         }
                         return false;
 
@@ -127,7 +127,7 @@ namespace AssemblyLineManager.AGV
                         response = putAssemb.Result;
                         if (response != null)
                         {
-                            return SendCommand("name", "execute");
+                            return SendCommand("execute");
                         }
                         return false;
 
@@ -138,7 +138,7 @@ namespace AssemblyLineManager.AGV
                         response = pickAssemb.Result;
                         if (response != null)
                         {
-                            return SendCommand("name", "execute");
+                            return SendCommand("execute");
                         }
                         return false;
 
@@ -150,7 +150,7 @@ namespace AssemblyLineManager.AGV
                         response = putWare.Result;
                         if (response != null)
                         {
-                            return SendCommand("name", "execute");
+                            return SendCommand("execute");
                         }
                         return false;
 
@@ -161,7 +161,7 @@ namespace AssemblyLineManager.AGV
                         response = pickWare.Result;
                         if (response != null)
                         {
-                            return SendCommand("name", "execute");
+                            return SendCommand("execute");
                         }
                         return false;
 
@@ -177,8 +177,6 @@ namespace AssemblyLineManager.AGV
             {
                 return false;
             }
-        }
-            
         }
     }
 }

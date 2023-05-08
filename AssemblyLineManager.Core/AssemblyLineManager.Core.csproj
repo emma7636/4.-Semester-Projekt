@@ -21,10 +21,10 @@
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
-		<PackageReference Include="AssemblyLineManager.AGV" Version="1.2.0" />
-		<PackageReference Include="AssemblyLineManager.AssemblyStation" Version="1.1.0" />
-		<PackageReference Include="AssemblyLineManager.CommonLib" Version="1.3.0" />
-		<PackageReference Include="AssemblyLineManager.Warehouse" Version="1.3.0" />
+		<PackageReference Include="AssemblyLineManager.AGV" Version="1.3.0" />
+		<PackageReference Include="AssemblyLineManager.AssemblyStation" Version="1.2.0" />
+		<PackageReference Include="AssemblyLineManager.CommonLib" Version="1.4.0" />
+		<PackageReference Include="AssemblyLineManager.Warehouse" Version="1.4.0" />
 		
 		<Content Include="GetInventory.xml">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

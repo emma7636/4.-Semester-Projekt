@@ -253,7 +253,7 @@ namespace AssemblyLineManager.Warehouse
          * @param string machineName, string command, string[]? commandParameters = null
          * @return bool
          */
-        public bool SendCommand(string machineName, string command, string[]? commandParameters = null)
+        public bool SendCommand(string command, string[]? commandParameters = null)
         {
             if (commandParameters != null) {
                 int itemId = Int32.Parse(commandParameters[0]);
