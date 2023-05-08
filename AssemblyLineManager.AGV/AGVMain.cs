@@ -16,7 +16,7 @@ class Program
             // Load a program on the AGV
             string programName = "MoveToAssemblyOperation";
             Console.WriteLine($"Loading program: {programName}");
-            string loadProgramResult = await agvClient.LoadProgram(programName);
+            string loadProgramResult = agvClient.LoadProgram(programName);
             Console.WriteLine("Load Program Result:");
             Console.WriteLine(loadProgramResult);
             /*
