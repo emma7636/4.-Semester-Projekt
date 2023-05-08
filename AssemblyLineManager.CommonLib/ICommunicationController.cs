@@ -12,6 +12,11 @@ namespace AssemblyLineManager.CommonLib;
 public interface ICommunicationController
 {
     /// <summary>
+    /// This property is used to get the name of the module so each module can be individually referenced.
+    /// </summary>
+    public string Name { get; }
+
+    /// <summary>
     /// This method is used to get the current state of the machine utilised by the module.
     /// The state information shall be formatted as a list of information with each entry having a name and a value.
     /// </summary>
