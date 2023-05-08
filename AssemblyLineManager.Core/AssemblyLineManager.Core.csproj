@@ -22,7 +22,7 @@
 		<PackagePath>\</PackagePath>
 	</None>
 	<PackageReference Include="AssemblyLineManager.AGV" Version="0.0.1" />
-	<PackageReference Include="AssemblyLineManager.AssemblyStation" Version="0.0.1" />
+	<PackageReference Include="AssemblyLineManager.AssemblyStation" Version="0.2.1" />
     <PackageReference Include="AssemblyLineManager.CommonLib" Version="1.2.1" />
     <PackageReference Include="AssemblyLineManager.Warehouse" Version="0.0.1" />
   </ItemGroup>
