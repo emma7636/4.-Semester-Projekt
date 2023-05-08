@@ -56,9 +56,9 @@ public partial class AssemblyStation
 
                 break;
             case "emulator/status":
-                Console.WriteLine("status");
-                Console.WriteLine(Encoding.UTF8.GetString(e.ApplicationMessage.Payload));
-                Console.WriteLine("QoS: " + e.ApplicationMessage.QualityOfServiceLevel.ToString());
+                //Console.WriteLine("status");
+                //Console.WriteLine(Encoding.UTF8.GetString(e.ApplicationMessage.Payload));
+                //Console.WriteLine("QoS: " + e.ApplicationMessage.QualityOfServiceLevel.ToString());
 
                 Status? newStatus = JsonConvert.DeserializeObject<Status>(json);
                 if (newStatus != null)

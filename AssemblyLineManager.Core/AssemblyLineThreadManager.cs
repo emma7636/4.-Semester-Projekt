@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,6 +24,7 @@ namespace AssemblyLineManager.Core
         public void Start()
         {
             thread.Start();
+            thread.Join();
         }
 
         public void ResumeThread()
@@ -37,7 +39,8 @@ namespace AssemblyLineManager.Core
 
         public void AssemblyLineThread()
         {
-            Action[] orderOfOperations = new Action[] {
+            Func<bool>[] orderOfOperations = new Func<bool>[] {
+                //() => instances["Warehouse"].SendCommand("Put Item", new string[] { "1", "Assemblen't Piece" }),
                 () => instances["Warehouse"].SendCommand("Pick Item", new string[] { "1" }),
                 () => instances["AGV"].SendCommand("MoveToStorageOperation"),
                 () => instances["AGV"].SendCommand("PickWarehouseOperation"),
@@ -47,14 +50,20 @@ namespace AssemblyLineManager.Core
                 () => instances["AGV"].SendCommand("PickAssemblyOperation"),
                 () => instances["AGV"].SendCommand("MoveToStorageOperation"),
                 () => instances["AGV"].SendCommand("PutWarehouseOperation"),
-                () => instances["Warehouse"].SendCommand("Put Item", new string[] { "1", "Assembled Piece" })
+                () => instances["Warehouse"].SendCommand("Insert Item", new string[] { "1", "Assembled Piece" })
             };
 
             foreach (var operation in orderOfOperations)
             {
                 manualResetEvent.WaitOne();
-                operation();
-                Console.WriteLine(operation.Method.ToString() + " completed successfully!");
+                if (operation())
+                {
+                    Console.WriteLine(operation.Method.ToString() + " completed successfully!");
+                }
+                else
+                {
+                    Console.WriteLine(operation.Method.ToString() + " did not complete successfully!");
+                }
             }
         }
     }
