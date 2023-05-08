@@ -18,6 +18,11 @@
 #button_group button{
     width: 20%;
     height: 100%;
+    
+}
+
+#button_group button:hover {
+        background-image: linear-gradient(to right, red,yellow,green,blue,violet);
 }
 
 #button_group a {
