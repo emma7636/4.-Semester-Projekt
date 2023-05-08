@@ -1,4 +1,4 @@
-using AssemblyLineManager.CommonLib;
+﻿using AssemblyLineManager.CommonLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +11,7 @@ namespace AssemblyLineManager.Core;
 public partial class Core
 {
     static readonly Dictionary<string, ICommunicationController> instances = new Dictionary<string, ICommunicationController>();
+    AssemblyLineThreadManager assemblyLineThreadManager;
 
     public Core()
     {
@@ -23,6 +24,33 @@ public partial class Core
                 Console.WriteLine("woohoo");
             }
         }*/
+        assemblyLineThreadManager = new AssemblyLineThreadManager(instances);
+        assemblyLineThreadManager.Start();
+    }
+
+    public void PauseAssemblyLine()
+    {
+        assemblyLineThreadManager.PauseThread();
+    }
+
+    public void ResumeAssemblyLine()
+    {
+        assemblyLineThreadManager.ResumeThread();
+    }
+
+    public Dictionary<string, KeyValuePair<string, string>[]> GetStates()
+    {
+        Dictionary<string, KeyValuePair<string, string>[]> states = new Dictionary<string, KeyValuePair<string, string>[]>();
+        foreach (var instance in instances)
+        {
+            states.Add(instance.Key, instance.Value.GetState());
+        }
+        return states;
+    }
+
+    public KeyValuePair<string, string>[] GetState(string moduleName)
+    {
+        return instances[moduleName].GetState();
     }
 
     static void LoadModules()
