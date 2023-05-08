@@ -24,7 +24,7 @@
 		<PackageReference Include="AssemblyLineManager.AGV" Version="1.1.2" />
 		<PackageReference Include="AssemblyLineManager.AssemblyStation" Version="1.0.2" />
 		<PackageReference Include="AssemblyLineManager.CommonLib" Version="1.2.1" />
-		<PackageReference Include="AssemblyLineManager.Warehouse" Version="1.2.2" />
+		<PackageReference Include="AssemblyLineManager.Warehouse" Version="1.2.3" />
 		
 		<Content Include="GetInventory.xml">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

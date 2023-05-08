@@ -13,12 +13,7 @@ internal class MAINPLEACEWORK
     static List<ICommunicationController> instances = new List<ICommunicationController>();
     public static void Main(String[] args)
     {
-        Assembly.LoadFrom(@"AssemblyLineManager.AGV.dll");
-
-        Assembly.LoadFrom(@"AssemblyLineManager.AssemblyStation.dll");
-
-        Assembly.LoadFrom(@"AssemblyLineManager.Warehouse.dll");
-        Stuff();
+        LoadModules();
 
         foreach (var instance in instances)
         {
@@ -30,8 +25,11 @@ internal class MAINPLEACEWORK
         }
     }
 
-    static void Stuff()
+    static void LoadModules()
     {
+        Assembly.LoadFrom(@"AssemblyLineManager.AGV.dll");
+        Assembly.LoadFrom(@"AssemblyLineManager.AssemblyStation.dll");
+        Assembly.LoadFrom(@"AssemblyLineManager.Warehouse.dll");
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
         var types = assemblies.SelectMany(a => a.GetTypes()).Where(t => typeof(ICommunicationController).IsAssignableFrom(t) && t.IsClass);
         instances.AddRange(types.Select(t => Activator.CreateInstance(t)).OfType<ICommunicationController>());
