@@ -66,7 +66,7 @@ namespace AssemblyLineManager.Warehouse
         [Test]
         public void SendCommand_SendsTheCommand_ReturnsTrue()
         {
-            Warehouse.RunAsync().Wait();
+            //Warehouse.RunAsync().Wait();
             string[] commands = { "1", "Test Item" };
             Warehouse warehouse = new Warehouse();
             bool shouldBeTrue = warehouse.SendCommand("Warehouse", "Insert Item", commands);
@@ -76,7 +76,7 @@ namespace AssemblyLineManager.Warehouse
         public void GetState_IdleState_ReturnsTrue()
         {
             // HELP I DONT KNOW HOW TO TEST THIS.
-            Warehouse.RunAsync().Wait();
+            //Warehouse.RunAsync().Wait();
             Warehouse warehouse = new Warehouse();
             List<KeyValuePair<string, string>> expectedList = new List<KeyValuePair<string, string>>
             {
