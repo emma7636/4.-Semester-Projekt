@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AssemblyLineManager.Warehouse
 {
-    internal class WarehouseMain
+    /*internal class WarehouseMain
     {
         static void Main(string[] args)
         {
@@ -20,5 +20,5 @@ namespace AssemblyLineManager.Warehouse
             //warehouse.GetState();
         } 
 
-    }
+    }*/
 }
