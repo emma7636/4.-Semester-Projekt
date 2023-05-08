@@ -6,58 +6,11 @@ namespace AssemblyLineManager.AGV
 {
     public partial class AGVClient
     {
-        private Thread? statusThread;
-
         public enum AGVState
         {
             Idle = 1,
             Executing = 2,
             Charging = 3
-        }
-
-        // Start the thread to check the status and send the request
-        public void StartStatusThread()
-        {
-            statusThread = new Thread(() =>
-            {
-                // Keep checking the status until the State value changes to Idle
-                while (true)
-                {
-                    string statusJson = GetStatus().GetAwaiter().GetResult();
-                    JObject status = JObject.Parse(statusJson);
-                    int i = 0;
-                    foreach (var value in status)
-                    {
-                        if (value.Key == "state" && value.Value != null)
-                        {
-                            i = value.Value.Value<int>();
-
-                            if (i == (int)AGVState.Idle)
-                            {
-                                // The State value has changed to Idle, set isStatusChecked to true
-                                //isIdle = true;
-                            }
-                            else
-                            {
-                                // The State value is no longer Idle, set isStatusChecked to false
-                                //isIdle = false;
-                            }
-                        }
-                    }
-
-                    // Sleep for 1 second before checking the status again
-                    Task.Delay(500).Wait();
-                }
-            });
-
-            statusThread.Start();
-            Thread.Sleep(800);
-        }
-
-        // Stop the status thread
-        public void StopStatusThread()
-        {
-            statusThread?.Interrupt();
         }
 
         public bool CheckIsIdle()
