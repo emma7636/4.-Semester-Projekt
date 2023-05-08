@@ -1,4 +1,5 @@
 @page "/"
+@using AssemblyLineManager.Core;
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,10 +13,10 @@
 
 <body>
     <div id="button_group">
-        <button @onclick="test">Start</button>
-        <button>Stop</button>
-        <button>Pause</button>
-        <button>Clear</button>
+        <button @onclick="Start">Start</button>
+        <button @onclick="Stop">Stop</button>
+        <button @onclick="Pause">Pause</button>
+        <button @onclick="Clear">Clear</button>
         <a href="machine_info">Machine info</a>
     </div>
 </body>
@@ -26,6 +27,7 @@
     void Start()
     {
         
+    
     }
     void Stop()
     {
