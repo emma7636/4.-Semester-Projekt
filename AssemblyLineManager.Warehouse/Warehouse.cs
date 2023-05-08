@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Nodes;
+using System.Text.Json.Nodes;
 using System.Xml.Linq;
 using System.IO;
 using System.Net.Http;
@@ -29,8 +29,6 @@ namespace AssemblyLineManager.Warehouse
     }
     public class Warehouse : ICommunicationControllerWithInventory
     {
-        //String URL = "http://localhost:8081/Service.asmx";
-
         static string? path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         private static HttpClient client = new HttpClient();
         private static bool connected = false;
@@ -53,30 +51,18 @@ namespace AssemblyLineManager.Warehouse
         }
 
         /**
-        * Sends a SOAP xml file to the warehouse and picks an item on the shelf with the same id
-        * 
-        * @param int id
-        * 
-        * @return Task<String>
-        */
-        public static async Task<string> PickItem(int id)
+         * Sends a SOAP xml file to the warehouse and picks an item on the shelf with the same id
+         * 
+         * @param int id
+         * 
+         * @return Task<String>
+         */
+        private static async Task<HttpResponseMessage> PickItem(int id)
         {
             string xmlName = "PickItem.xml";
             RewriteXML(id, null, xmlName);
-            string postRequest = "";
-            string result;
             HttpResponseMessage response = await client.PostAsync("/Service.asmx", SetSC(xmlName));
-            if (response.IsSuccessStatusCode)
-            {
-                postRequest = await response.Content.ReadAsStringAsync();
-                result = "Picked item with id: " + id;
-                return result;
-            }
-            else
-            {
-                result = "Failed to pick item";
-                return result;
-            }
+            return response;
         }
         /**
          * Sends a SOAP xml file to the warehouse and inserts an item on the shelf with the same id
@@ -86,28 +72,14 @@ namespace AssemblyLineManager.Warehouse
          * 
          * @return Task<String>
          */
-        public static async Task<string> InsertItem(int id, string name)
+        private static async Task<HttpResponseMessage> InsertItem(int id, string name)
         {
             string xmlName = "InsertItem.xml";
             RewriteXML(id, name, xmlName);
-            string postRequest = "";
-            string result;
             HttpResponseMessage response = await client.PostAsync("/Service.asmx", SetSC(xmlName));
-            bool failChecker = InsertChecker(response);
-            if (failChecker)
-            {
-                postRequest = await response.Content.ReadAsStringAsync();
-                result = "Inserted item " + name + " on " + id;
-                return result;
-            }
-            else
-            {
-                result = "Failed to insert item";
-                return result;
-            }
-
+            return response;
         }
-        private static bool InsertChecker(HttpResponseMessage response)
+        private static bool CommandChecker(HttpResponseMessage response)
         {
             XmlDocument doc = new XmlDocument();
             doc.Load(response.Content.ReadAsStream());
@@ -118,14 +90,13 @@ namespace AssemblyLineManager.Warehouse
             {
                 string innerText;
                 innerText = trayIdNode.InnerText;
-                string fail = "Operation could not be handled. Check inventory status.";
-                if (innerText == fail)
+                string failedInsert = "Operation could not be handled. Check inventory status.";
+                string outOfbounds = "Required parameters not present, or invalid input.";
+                if (innerText == failedInsert || innerText == outOfbounds)
                 {
                     return false;
                 }
-
             }
-
             return true;
         }
         /**
@@ -142,34 +113,16 @@ namespace AssemblyLineManager.Warehouse
             StringContent sc = new StringContent(fileForSC, Encoding.UTF8, "application/xml");
             return sc;
         }
-
-
         /**
          * Connects to the simulation of the assembly line
+         * 
+         * @return Task
          */
         public static async Task RunAsync()
         {
             client.BaseAddress = new Uri("http://localhost:8081");
             client.DefaultRequestHeaders.Accept.Clear();
             Warehouse.Connected = true;
-
-        }
-
-        /**
-         * Sends a SOAP XML command to the machine and gets back the inventory of the system
-         * 
-         * @return Task<string>
-         */
-        public static async Task<string> GetInventoryWithStatus()
-        {
-
-            string getRequest = "";
-            HttpResponseMessage response = await client.PostAsync("/Service.asmx", SetSC("GetInventory.xml"));
-            if (response.IsSuccessStatusCode)
-            {
-                getRequest = await response.Content.ReadAsStringAsync();
-            }
-            return getRequest;
         }
 
         /**
@@ -240,7 +193,6 @@ namespace AssemblyLineManager.Warehouse
             }
             return ItemList;
         }
-
         /**
          * Gets a specific item from the inventory, returns an error item if there's an error
          * 
@@ -263,17 +215,6 @@ namespace AssemblyLineManager.Warehouse
             }
             return defaultItem;
         }
-        /**
-         * Shows how many items in the inventory
-         * 
-         * @return int
-         */
-        public static int GetInventoryCount()
-        {
-            ArrayList list = GetInventoryList();
-            return list.Count;
-        }
-
         /**
          * Creates a KeyValuePair array for the inventory so it can be sent to the front end.
          * 
@@ -318,15 +259,27 @@ namespace AssemblyLineManager.Warehouse
                 int itemId = Int32.Parse(commandParameters[0]);
                 if (command == "Pick Item")
                 {
-                   PickItem(itemId).Wait();
-                   return true;
-                    
+                    HttpResponseMessage response = PickItem(itemId).Result;
+                    if (CommandChecker(response))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }     
                 }
                 else if (command == "Insert Item")
                 {
                     string itemName = commandParameters[1];
-                    InsertItem(itemId,itemName).Wait();
-                    return true;
+                    HttpResponseMessage response = InsertItem(itemId, itemName).Result;
+                    HttpResponseMessage response1 = response;
+                    if (CommandChecker(response)) {
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
                 }
             }
             return false;
