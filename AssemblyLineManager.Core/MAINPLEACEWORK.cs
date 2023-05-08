@@ -4,22 +4,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AssemblyLineManager.CommonLib;
+using System.Reflection;
 
 namespace AssemblyLineManager.Core;
 
 internal class MAINPLEACEWORK
 {
+    static List<ICommunicationController> instances = new List<ICommunicationController>();
     public static void Main(String[] args)
     {
-        // Alternatively, you can use reflection to get a list of all available implementations of the interface
-        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-        var types = assemblies.SelectMany(a => a.GetTypes()).Where(t => typeof(ICommunicationController).IsAssignableFrom(t) && t.IsClass);
-        var instances = types.Select(t => Activator.CreateInstance(t)).OfType<ICommunicationController>();
+        Assembly.LoadFrom(@"AssemblyLineManager.AGV.dll");
 
-        // Iterate over the list of instances and call the Speak method on each object
+        Assembly.LoadFrom(@"AssemblyLineManager.AssemblyStation.dll");
+
+        Assembly.LoadFrom(@"AssemblyLineManager.Warehouse.dll");
+        Stuff();
+
         foreach (var instance in instances)
         {
-            instance.GetState();
+            Console.WriteLine(instance.ToString());
+            foreach (var thing in instance.GetState())
+            {
+                Console.WriteLine(thing.ToString());
+            }
         }
+    }
+
+    static void Stuff()
+    {
+        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        var types = assemblies.SelectMany(a => a.GetTypes()).Where(t => typeof(ICommunicationController).IsAssignableFrom(t) && t.IsClass);
+        instances.AddRange(types.Select(t => Activator.CreateInstance(t)).OfType<ICommunicationController>());
     }
 }

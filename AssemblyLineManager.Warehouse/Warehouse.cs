@@ -31,17 +31,12 @@ namespace AssemblyLineManager.Warehouse
     {
         //String URL = "http://localhost:8081/Service.asmx";
 
-        private Dictionary<int, string> stateLUT;
         static string? path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         private static HttpClient client = new HttpClient();
         private static bool connected = false;
         public Warehouse()
         {
-            // Not sure if this was what the dictionary was meant to be used as.
-            stateLUT = new Dictionary<int, string>();
-            stateLUT.Add(0, "Idle");
-            stateLUT.Add(1, "Executing");
-            stateLUT.Add(2, "Error");
+            RunAsync().Wait();
         }
         public static bool Connected
         {
