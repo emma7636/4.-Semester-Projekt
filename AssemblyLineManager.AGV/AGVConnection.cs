@@ -66,42 +66,104 @@ namespace AssemblyLineManager.AGV
             AGVClient agvClient = new AGVClient();
             if (command != "") // bedre gate senere
             {
+                string response;
                 switch (command)
-                {   
+                {
                     // If execute is received
                     case "execute":
                         Console.WriteLine("Program will execute");
                         //string loadProgramResult = agvClient.LoadProgram(command);
-                        return true;
+                        try
+                        {
+                            var test = agvClient.ExecuteProgram();
+                            test.Wait();
+                            response = test.Result;
+                            return true;
+                        } catch (Exception)
+                        {
+                            return false;
+                        }
 
                     // Commands to move AGV
                     case "MoveToChargerOperation":
                         Console.WriteLine("Moving to Charger");
-                        return true;
+                        var moveCharge  = agvClient.LoadProgram(command);
+                        moveCharge.Wait(); 
+                        response = moveCharge.Result;
+                        if (response != null)
+                        {
+                            return SendCommand("name","execute");
+                        }
+                        return false;
 
                     case "MoveToAssemblyOperation":
                         Console.WriteLine("Moving to Assembly Station");
-                        return true;
+                        var moveAssemb = agvClient.LoadProgram(command);
+                        moveAssemb.Wait();
+                        response = moveAssemb.Result;
+                        if (response != null)
+                        {
+                            return SendCommand("name", "execute");
+                        }
+                        return false;
+
                     case "MoveToStorageOperation":
                         Console.WriteLine("Moving to Warehouse");
-                        return true;
+                        var moveWare = agvClient.LoadProgram(command);
+                        moveWare.Wait();
+                        response = moveWare.Result;
+                        if (response != null)
+                        {
+                            return SendCommand("name", "execute");
+                        }
+                        return false;
 
                     // Pick or Put commands:
-                     // Assembly Station:
+                    // Assembly Station:
                     case "PutAssemblyOperation":
                         Console.WriteLine("Placing item on the Assembly Station");
-                        return true;
+                        var putAssemb = agvClient.LoadProgram(command);
+                        putAssemb.Wait();
+                        response = putAssemb.Result;
+                        if (response != null)
+                        {
+                            return SendCommand("name", "execute");
+                        }
+                        return false;
+
                     case "PickAssemblyOperation":
                         Console.WriteLine("Picking item from the Assembly Station");
-                        return true;
+                        var pickAssemb = agvClient.LoadProgram(command);
+                        pickAssemb.Wait();
+                        response = pickAssemb.Result;
+                        if (response != null)
+                        {
+                            return SendCommand("name", "execute");
+                        }
+                        return false;
 
-                     //Warehouse:
+                    //Warehouse:
                     case "PutWarehouseOperation":
                         Console.WriteLine("Placing item on the Warehouse");
-                        return true;
+                        var putWare = agvClient.LoadProgram(command);
+                        putWare.Wait();
+                        response = putWare.Result;
+                        if (response != null)
+                        {
+                            return SendCommand("name", "execute");
+                        }
+                        return false;
+
                     case "PickWarehouseOperation":
                         Console.WriteLine("Picking item from the Warehouse");
-                        return true;
+                        var pickWare = agvClient.LoadProgram(command);
+                        pickWare.Wait();
+                        response = pickWare.Result;
+                        if (response != null)
+                        {
+                            return SendCommand("name", "execute");
+                        }
+                        return false;
 
 
                     // if the command received is not recognized, then return false
@@ -109,11 +171,14 @@ namespace AssemblyLineManager.AGV
                         Console.WriteLine("Command not understood, no command will be executed");
                         return false;
                 }
+
             }
             else
             {
                 return false;
             }
+        }
+            
         }
     }
 }
