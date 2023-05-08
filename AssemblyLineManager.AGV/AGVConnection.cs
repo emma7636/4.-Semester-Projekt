@@ -76,6 +76,10 @@ namespace AssemblyLineManager.AGV
                         try
                         {
                             response = agvClient.ExecuteProgram();
+                            while (!CheckIsIdle())
+                            {
+                                Thread.Sleep(100);
+                            }
                             return true;
                         } catch (Exception)
                         {

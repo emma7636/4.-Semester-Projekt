@@ -1,12 +1,12 @@
 using System.Text;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AssemblyLineManager.AGV
 {
     public partial class AGVClient
     {
-        private bool isIdle= false;
-        private Thread statusThread;
+        private Thread? statusThread;
 
         public enum AGVState
         {
@@ -18,40 +18,75 @@ namespace AssemblyLineManager.AGV
         // Start the thread to check the status and send the request
         public void StartStatusThread()
         {
-            statusThread = new Thread(async () =>
+            statusThread = new Thread(() =>
             {
                 // Keep checking the status until the State value changes to Idle
                 while (true)
                 {
-                    string statusJson = await GetStatus();
-                    dynamic status = JObject.Parse(statusJson);
-
-                    if ((int)status.State == (int)AGVState.Idle)
+                    string statusJson = GetStatus().GetAwaiter().GetResult();
+                    JObject status = JObject.Parse(statusJson);
+                    int i = 0;
+                    foreach (var value in status)
                     {
-                        break;
+                        if (value.Key == "state" && value.Value != null)
+                        {
+                            i = value.Value.Value<int>();
+
+                            if (i == (int)AGVState.Idle)
+                            {
+                                // The State value has changed to Idle, set isStatusChecked to true
+                                //isIdle = true;
+                            }
+                            else
+                            {
+                                // The State value is no longer Idle, set isStatusChecked to false
+                                //isIdle = false;
+                            }
+                        }
                     }
 
                     // Sleep for 1 second before checking the status again
-                    await Task.Delay(1000);
+                    Task.Delay(500).Wait();
                 }
-
-                // The State value has changed to Idle, set isStatusChecked to true
-                isIdle = true;
             });
 
             statusThread.Start();
+            Thread.Sleep(800);
         }
 
         // Stop the status thread
         public void StopStatusThread()
         {
-            statusThread?.Abort();
+            statusThread?.Interrupt();
+        }
+
+        public bool CheckIsIdle()
+        {
+            string statusJson = GetStatus().GetAwaiter().GetResult();
+            JObject status = JObject.Parse(statusJson);
+            foreach (var value in status)
+            {
+                if (value.Key == "state" && value.Value != null)
+                {
+                    if (value.Value.Value<int>() == (int)AGVState.Idle)
+                    {
+                        // The State value has changed to Idle, set isStatusChecked to true
+                        return true;
+                    }
+                    else
+                    {
+                        // The State value is no longer Idle, set isStatusChecked to false
+                        return false;
+                    }
+                }
+            }
+            return false;
         }
 
         // Get the current status of the AGV
         public async Task<string> GetStatus()
         {
-            HttpResponseMessage response = await httpClient.GetAsync(baseUrl);
+            HttpResponseMessage response = httpClient.GetAsync(baseUrl).GetAwaiter().GetResult();
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
             return responseBody;
@@ -61,7 +96,7 @@ namespace AssemblyLineManager.AGV
         public string LoadProgram(string programName)
         {
             // Check if the status thread has finished checking the status
-            if (!isIdle)
+            if (!CheckIsIdle())
             {
                 throw new InvalidOperationException("Cannot execute until previous job is finished");
             }
@@ -78,7 +113,7 @@ namespace AssemblyLineManager.AGV
         public string ExecuteProgram()
         {
             // Check if the status thread has finished checking the status
-            if (!isIdle)
+            if (!CheckIsIdle())
             {
                 throw new InvalidOperationException("Cannot execute until previous job is finished");
             }
@@ -94,7 +129,7 @@ namespace AssemblyLineManager.AGV
         private string SendPutRequest(object payload)
         {
             // Check if the status thread has finished checking the status
-            if (!isIdle)
+            if (!CheckIsIdle())
             {
                 throw new InvalidOperationException("Cannot execute until previous job is finished");
             }
@@ -104,7 +139,7 @@ namespace AssemblyLineManager.AGV
             HttpResponseMessage response = httpClient.PutAsync(baseUrl, content).GetAwaiter().GetResult();
             if (response.IsSuccessStatusCode)
             {
-                isIdle = false;
+                //isIdle = false;
                 return response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
             }
             else
