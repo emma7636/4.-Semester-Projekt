@@ -7,6 +7,14 @@ public partial class AssemblyStation : ICommunicationController
 {
     private static Dictionary<int, string> stateLUT = new Dictionary<int, string>(); //Lookup table for the various states of the assembly station
 
+    public string Name
+    {
+        get
+        {
+            return "AssemblyStation";
+        }
+    }
+
     static AssemblyStation(){
         //Generate a lookup table for the various states
         stateLUT.Add(0, "Idle");

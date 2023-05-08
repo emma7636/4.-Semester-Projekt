@@ -43,13 +43,22 @@ namespace AssemblyLineManager.Warehouse
             get { return connected; }
             set { connected = value; }
         }
+
+        public string Name
+        {
+            get
+            {
+                return "Warehouse";
+            }
+        }
+
         /**
-         * Sends a SOAP xml file to the warehouse and picks an item on the shelf with the same id
-         * 
-         * @param int id
-         * 
-         * @return Task<String>
-         */
+        * Sends a SOAP xml file to the warehouse and picks an item on the shelf with the same id
+        * 
+        * @param int id
+        * 
+        * @return Task<String>
+        */
         public static async Task<string> PickItem(int id)
         {
             string xmlName = "PickItem.xml";

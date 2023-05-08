@@ -20,6 +20,14 @@ namespace AssemblyLineManager.AGV
             this.httpClient = httpClient;
         }
 
+        public string Name
+        {
+            get
+            {
+                return "AGV";
+            }
+        }
+
         //ICommunicationController methods implemented
         public KeyValuePair<string, string>[] GetState()
         {
