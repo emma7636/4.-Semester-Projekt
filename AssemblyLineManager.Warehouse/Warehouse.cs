@@ -259,7 +259,7 @@ namespace AssemblyLineManager.Warehouse
                 int itemId = Int32.Parse(commandParameters[0]);
                 if (command == "Pick Item")
                 {
-                    HttpResponseMessage response = PickItem(itemId).Result;
+                    HttpResponseMessage response = PickItem(itemId).GetAwaiter().GetResult();
                     if (CommandChecker(response))
                     {
                         return true;
@@ -272,7 +272,7 @@ namespace AssemblyLineManager.Warehouse
                 else if (command == "Insert Item")
                 {
                     string itemName = commandParameters[1];
-                    HttpResponseMessage response = InsertItem(itemId, itemName).Result;
+                    HttpResponseMessage response = InsertItem(itemId, itemName).GetAwaiter().GetResult();
                     HttpResponseMessage response1 = response;
                     if (CommandChecker(response)) {
                         return true;

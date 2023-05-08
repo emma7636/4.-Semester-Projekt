@@ -54,7 +54,7 @@ namespace AssemblyLineManager.Tests
             _fakeHttpMessageHandler.SetResponseContent(expectedPayload.ToString());
 
             // Act
-            var result = await _agvClient.LoadProgram(expectedProgramName);
+            var result = _agvClient.LoadProgram(expectedProgramName);
 
             // Assert
             Assert.AreEqual(expectedPayload.ToString(), result);
@@ -73,7 +73,7 @@ namespace AssemblyLineManager.Tests
             _fakeHttpMessageHandler.SetResponseContent(expectedPayload.ToString());
 
             // Act
-            var result = await _agvClient.ExecuteProgram();
+            var result = _agvClient.ExecuteProgram();
 
             // Assert
             Assert.AreEqual(expectedPayload.ToString(), result);
@@ -92,7 +92,7 @@ namespace AssemblyLineManager.Tests
             _fakeHttpMessageHandler.SetResponseContent(expectedPayload.ToString());
 
             // Act
-            var result = await _agvClient.LoadProgram(expectedProgramName);
+            var result = _agvClient.LoadProgram(expectedProgramName);
 
             // Assert
             Assert.AreEqual(expectedPayload.ToString(), result);
@@ -116,7 +116,7 @@ namespace AssemblyLineManager.Tests
             _fakeHttpMessageHandler.SetResponseContent(expectedPayload.ToString());
 
             // Act
-            var result = await _agvClient.ExecuteProgram();
+            var result = _agvClient.ExecuteProgram();
 
             // Assert
             Assert.AreEqual(expectedPayload.ToString(), result);
