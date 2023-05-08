@@ -28,18 +28,18 @@ namespace AssemblyLineManager.AGV
             //Deserialize the JSON Object to a dictionary
             var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(status);
             
-            Console.WriteLine("Test Dictionary Solution + \n");
+            //Console.WriteLine("Test Dictionary Solution + \n");
        
             if (dict != null)
             {
                 // Makes the dictionary into an array to match the desired return datatype for this method.
                 var list = dict.ToArray();
-                // Not important but nice to see what is in the dictionary
+                /*// Not important but nice to see what is in the dictionary
                 foreach (var kv in list)
                 {
                     Console.WriteLine(kv.Key + ": " + kv.Value);
                    
-                }
+                }*/
 
                 return list;
             }
