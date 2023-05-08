@@ -5,7 +5,7 @@ namespace AssemblyLineManager.AGV
 {
     public partial class AGVClient
     {
-        private bool isStatusChecked = false;
+        private bool isIdle= false;
         private Thread statusThread;
 
         public enum AGVState
@@ -36,7 +36,7 @@ namespace AssemblyLineManager.AGV
                 }
 
                 // The State value has changed to Idle, set isStatusChecked to true
-                isStatusChecked = true;
+                isIdle = true;
             });
 
             statusThread.Start();
@@ -61,7 +61,7 @@ namespace AssemblyLineManager.AGV
         public string LoadProgram(string programName)
         {
             // Check if the status thread has finished checking the status
-            if (!isStatusChecked)
+            if (!isIdle)
             {
                 throw new InvalidOperationException("Cannot execute until previous job is finished");
             }
@@ -78,7 +78,7 @@ namespace AssemblyLineManager.AGV
         public string ExecuteProgram()
         {
             // Check if the status thread has finished checking the status
-            if (!isStatusChecked)
+            if (!isIdle)
             {
                 throw new InvalidOperationException("Cannot execute until previous job is finished");
             }
@@ -94,7 +94,7 @@ namespace AssemblyLineManager.AGV
         private string SendPutRequest(object payload)
         {
             // Check if the status thread has finished checking the status
-            if (!isStatusChecked)
+            if (!isIdle)
             {
                 throw new InvalidOperationException("Cannot execute until previous job is finished");
             }
@@ -104,6 +104,7 @@ namespace AssemblyLineManager.AGV
             HttpResponseMessage response = httpClient.PutAsync(baseUrl, content).GetAwaiter().GetResult();
             if (response.IsSuccessStatusCode)
             {
+                isIdle = false;
                 return response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
             }
             else
