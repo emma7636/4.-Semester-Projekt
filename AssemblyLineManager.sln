@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssemblyLineManager.Tests", "AssemblyLineManager.Tests\AssemblyLineManager.Tests.csproj", "{009A14E6-47D3-4809-A22E-03F2197F14AE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5F34F5D7-D883-4A02-A6FF-5A5A8333BF0D} = {5F34F5D7-D883-4A02-A6FF-5A5A8333BF0D}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssemblyLineManager.AGV", "AssemblyLineManager.AGV\AssemblyLineManager.AGV.csproj", "{42BBC723-59A7-4CAF-A632-C035DDED219A}"
 EndProject

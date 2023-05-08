@@ -1,0 +1,7 @@
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <s:Body>
+    <GetInventoryResponse xmlns="http://tempuri.org/">
+      <GetInventoryResult>{"Inventory":[{"Id":1,"Content":"Item 1"},{"Id":2,"Content":"Item 2"},{"Id":3,"Content":"Item 3"},{"Id":4,"Content":"Item 4"},{"Id":5,"Content":"Item 5"},{"Id":6,"Content":"Item 6"},{"Id":7,"Content":"Item 7"},{"Id":8,"Content":"Item 8"},{"Id":9,"Content":"Item 9"},{"Id":10,"Content":"Item 10"}],"State":0,"DateTime":"2023-04-13T15:22:20.7974571+00:00"}</GetInventoryResult>
+    </GetInventoryResponse>
+  </s:Body>
+</s:Envelope>

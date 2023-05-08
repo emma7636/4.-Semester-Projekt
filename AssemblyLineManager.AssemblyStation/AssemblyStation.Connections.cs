@@ -1,80 +1,68 @@
-﻿using MQTTnet;
+using MQTTnet;
 using MQTTnet.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MQTTnet.Client.Options;
+using MQTTnet.Server;
 
-namespace AssemblyLineManager.AssemblyStation
+namespace AssemblyLineManager.AssemblyStation;
+
+public partial class AssemblyStation
 {
-    public partial class AssemblyStation
+    private static readonly MqttFactory _mqttFactory;
+    private readonly IMqttClient _mqttClient;
+
+    private async Task ConnectToClient()
     {
-        private static MqttFactory? mqttFactory;
-        private static IMqttClient? mqttClient;
-        private static MqttClientOptions? options;
-        private static async Task ConnectToClient()
-        {
-            mqttFactory = new MqttFactory();
-            mqttClient = mqttFactory.CreateMqttClient();
-            options = new MqttClientOptionsBuilder()
-                .WithClientId("AssemblyStationClient")
-                .WithTcpServer("localhost", 1883)
-                .WithCleanSession()
-                .Build();
-            try
-            {
-                await mqttClient.ConnectAsync(options);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Connecting to MQTT Brokers failed.");
-                Console.WriteLine(ex.Message);
-            }
-        }
+        //Setting up the required info to establish a connection to the MQTT broker.
+        IMqttClientOptions options = new MqttClientOptionsBuilder()
+            .WithClientId("AssemblyLineManagerClient")
+            .WithTcpServer("localhost", 1883)
+            .WithCleanSession(true)
+            .Build();
 
-        private static async Task DisconnectFromClient()
+        //Setting up code that runs once a connection is established.
+        _mqttClient.UseConnectedHandler(e =>
         {
-            try
-            {
-                await mqttClient.DisconnectAsync(MqttClientDisconnectReason.ServerShuttingDown);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Disconnect from Broker failed.");
-                Console.WriteLine(ex.Message);
-            }
-        }
+            Console.WriteLine("Connected successfully with MQTT Broker.");
+            SubscribeToTopics().Wait();
+            Console.WriteLine("Subscribed to topics.");
+        });
 
-        private static async Task SubscribeToTopics()
+        //Setting up code that runs once a connection is lost.
+        _mqttClient.UseDisconnectedHandler(e =>
         {
-            if (mqttFactory != null && mqttClient != null)
-            {
-                if (mqttClient.IsConnected)
-                {
-                    var subscribeOptions = mqttFactory.CreateSubscribeOptionsBuilder().WithTopicFilter(
-                    f =>
-                    {
-                        f.WithTopic("emulator/status");
-                    }
-                ).WithTopicFilter(
-                    f =>
-                    {
-                        f.WithTopic("emulator/checkhealth");
-                    }
-                ).Build();
+            Console.WriteLine("Disconnected from MQTT Broker unexpectedly.");
+        });
 
-                    await mqttClient.SubscribeAsync(subscribeOptions);
-                }
-                else
-                {
-                    Console.WriteLine("Lost connection to broker");
-                }
-            }
-            else
-            {
-                throw new Exception("This shouldn't have happened!");
-            }
+        //Setting up code that runs every time a message is received.
+        _mqttClient.UseApplicationMessageReceivedHandler(MessageReceivedHandling);
+
+        //Establishing the connection.
+        await _mqttClient.ConnectAsync(options);
+    }
+
+    //Manually disconnect from the MQTT broker.
+    private async Task DisconnectFromClient()
+    {
+        try
+        {
+            await _mqttClient.DisconnectAsync();
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Disconnect from Broker failed.");
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    //Subscribe to the topics we want to receive messages from.
+    private async Task SubscribeToTopics()
+    {
+        var subscribeOptions = _mqttFactory.CreateSubscribeOptionsBuilder()
+            .WithTopicFilter("emulator/status")
+            .WithTopicFilter("emulator/checkhealth")
+            .WithTopicFilter("emulator/echo") //This isn't strictly necessary, but it's a good idea
+            .Build();
+
+        await _mqttClient.SubscribeAsync(subscribeOptions);
     }
 }
