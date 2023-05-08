@@ -38,7 +38,7 @@ namespace AssemblyLineManager.Warehouse
             KeyValuePair<string, string>[] expected = expectedList.ToArray();
             KeyValuePair<string, string>[] result = warehouse.GetState();
 
-           
+            Assert.AreEqual(expected, result);
         }
     }
 }
