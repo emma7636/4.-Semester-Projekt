@@ -20,13 +20,13 @@ namespace AssemblyLineManager.AGV
         {
             statusThread = new Thread(async () =>
             {
-                // Keep checking the status until the State value changes to 1
+                // Keep checking the status until the State value changes to Idle
                 while (true)
                 {
                     string statusJson = await GetStatus();
                     dynamic status = JObject.Parse(statusJson);
 
-                    if ((int)status.State == 1)
+                    if ((int)status.State == (int)AGVState.Idle)
                     {
                         break;
                     }
@@ -35,7 +35,7 @@ namespace AssemblyLineManager.AGV
                     await Task.Delay(1000);
                 }
 
-                // The State value has changed to 1, set isStatusChecked to true
+                // The State value has changed to Idle, set isStatusChecked to true
                 isStatusChecked = true;
             });
 
