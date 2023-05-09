@@ -48,6 +48,12 @@ namespace AssemblyLineManager.AGV
         // Load desired program into AGV
         public string LoadProgram(string programName)
         {
+            // Check if the programName is empty or null
+            if (string.IsNullOrEmpty(programName))
+            {
+                throw new ArgumentException("Invalid program name");
+            }
+
             // Check if the status thread has finished checking the status
             if (!CheckIsIdle())
             {
@@ -61,6 +67,7 @@ namespace AssemblyLineManager.AGV
             };
             return SendPutRequest(payload);
         }
+
 
         // Execute previously specified program on the AGV
         public string ExecuteProgram()

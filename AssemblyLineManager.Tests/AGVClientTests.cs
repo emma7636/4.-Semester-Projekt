@@ -1,17 +1,16 @@
 using System.Net;
 using AssemblyLineManager.AGV;
 using Newtonsoft.Json.Linq;
-
+using Newtonsoft.Json;
 
 namespace AssemblyLineManager.Tests
 {
-    // Constructor for AGVClientTests, initializes instances of AGVClient and FakeHttpMessageHandler.
     public class AGVClientTests
     {
         private readonly AGVClient _agvClient;
         private readonly FakeHttpMessageHandler _fakeHttpMessageHandler;
-        public AGVClientTests()
 
+        public AGVClientTests()
         {
             _fakeHttpMessageHandler = new FakeHttpMessageHandler();
             var httpClient = new HttpClient(_fakeHttpMessageHandler);
@@ -51,14 +50,23 @@ namespace AssemblyLineManager.Tests
                 ["Program name"] = expectedProgramName,
                 ["State"] = expectedState
             };
-            _fakeHttpMessageHandler.SetResponseContent(expectedPayload.ToString());
+            _fakeHttpMessageHandler.SetResponseContent("{\"state\": 1}"); // Set the AGV state to Idle
 
             // Act
-            var result = _agvClient.LoadProgram(expectedProgramName);
+            _agvClient.LoadProgram(expectedProgramName);
 
             // Assert
-            Assert.AreEqual(expectedPayload.ToString(), result);
+            if (_fakeHttpMessageHandler.LastRequest?.Content == null)
+            {
+                Assert.Fail("Request content is null.");
+            }
+            else
+            {
+                var actualPayload = await _fakeHttpMessageHandler.LastRequest.Content.ReadAsStringAsync();
+                Assert.AreEqual(expectedPayload.ToString(), actualPayload);
+            }
         }
+
 
         // Test case to verify if ExecuteProgram() sends a valid request to the AGV.
         [Test]
@@ -70,62 +78,57 @@ namespace AssemblyLineManager.Tests
             {
                 ["State"] = expectedState
             };
-            _fakeHttpMessageHandler.SetResponseContent(expectedPayload.ToString());
+            _fakeHttpMessageHandler.SetResponseContent("{\"state\": 1}"); // Set the AGV state to Idle
 
             // Act
-            var result = _agvClient.ExecuteProgram();
+            _agvClient.ExecuteProgram();
 
             // Assert
-            Assert.AreEqual(expectedPayload.ToString(), result);
+            if (_fakeHttpMessageHandler.LastRequest?.Content == null)
+            {
+                Assert.Fail("Request content is null.");
+            }
+            else
+            {
+                var actualPayload = JObject.Parse(await _fakeHttpMessageHandler.LastRequest.Content.ReadAsStringAsync());
+                Assert.AreEqual(expectedPayload.ToString(Formatting.None), actualPayload.ToString(Formatting.None));
+            }
         }
 
         // Test case to verify if LoadProgram() returns an error when provided with an empty program name.
         [Test]
-        public async Task LoadProgram_EmptyProgramName_ReturnsError()
+        public void LoadProgram_EmptyProgramName_ThrowsException()
         {
             // Arrange
             string expectedProgramName = "";
-            var expectedPayload = new JObject
-            {
-                ["Error"] = "Invalid program name",
-            };
-            _fakeHttpMessageHandler.SetResponseContent(expectedPayload.ToString());
 
-            // Act
-            var result = _agvClient.LoadProgram(expectedProgramName);
+            // Act and Assert
+            var exception = Assert.Throws<ArgumentException>(() => _agvClient.LoadProgram(expectedProgramName));
 
-            // Assert
-            Assert.AreEqual(expectedPayload.ToString(), result);
+            if (exception != null)
+            Assert.AreEqual("Invalid program name", exception.Message);
         }
+
 
         // Test case to verify if ExecuteProgram() returns an error when the AGV is in the wrong state.
         [Test]
         public async Task ExecuteProgram_AGVInWrongState_ReturnsError()
         {
             // Arrange
-            _fakeHttpMessageHandler.SetResponseContent("{\"state\": " + (int)AGVClient.AGVState.Charging + "}");
+            _fakeHttpMessageHandler.SetResponseContent("{\"state\": " + (int)AGVClient.AGVState.Charging + "}"); // Set the AGV state to Charging
 
             // Act
             await _agvClient.GetStatus(); // Update the AGVClient's internal state to Charging
 
-            // Arrange (Continued)
-            var expectedPayload = new JObject
-            {
-                ["Error"] = "Cannot execute program while AGV is charging",
-            };
-            _fakeHttpMessageHandler.SetResponseContent(expectedPayload.ToString());
-
-            // Act
-            var result = _agvClient.ExecuteProgram();
-
             // Assert
-            Assert.AreEqual(expectedPayload.ToString(), result);
+            Assert.ThrowsAsync<InvalidOperationException>(async () => _agvClient.ExecuteProgram());
         }
     }
 
     public class FakeHttpMessageHandler : HttpMessageHandler
     {
         private string _responseContent = string.Empty;
+        public HttpRequestMessage? LastRequest { get; private set; }
 
         // Method to set the response content for the fake HTTP message handler.
         public void SetResponseContent(string responseContent)
@@ -136,6 +139,7 @@ namespace AssemblyLineManager.Tests
         // Method to intercept and mock the HTTP requests for unit testing.
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            LastRequest = request;
             var response = new HttpResponseMessage(HttpStatusCode.OK)
             {
                 Content = new StringContent(_responseContent)
