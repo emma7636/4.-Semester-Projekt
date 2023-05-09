@@ -2,6 +2,7 @@ using System.Net;
 using AssemblyLineManager.AGV;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace AssemblyLineManager.Tests
 {
@@ -62,10 +63,12 @@ namespace AssemblyLineManager.Tests
             }
             else
             {
-                var actualPayload = await _fakeHttpMessageHandler.LastRequest.Content.ReadAsStringAsync();
-                Assert.AreEqual(expectedPayload.ToString(), actualPayload);
+                var actualPayloadJson = await _fakeHttpMessageHandler.LastRequest.Content.ReadAsStringAsync();
+                var actualPayload = JObject.Parse(actualPayloadJson);
+                Assert.IsTrue(JToken.DeepEquals(expectedPayload, actualPayload));
             }
         }
+
 
 
         // Test case to verify if ExecuteProgram() sends a valid request to the AGV.
@@ -106,7 +109,7 @@ namespace AssemblyLineManager.Tests
             var exception = Assert.Throws<ArgumentException>(() => _agvClient.LoadProgram(expectedProgramName));
 
             if (exception != null)
-            Assert.AreEqual("Invalid program name", exception.Message);
+                Assert.AreEqual("Invalid program name", exception.Message);
         }
 
 
@@ -123,11 +126,28 @@ namespace AssemblyLineManager.Tests
             // Assert
             Assert.ThrowsAsync<InvalidOperationException>(async () => _agvClient.ExecuteProgram());
         }
+
+        [Test]
+        public async Task CheckIsIdle_ReturnsTrue_WhenStateIsIdle()
+        {
+            _fakeHttpMessageHandler.SetResponseContent("{\"state\": " + (int)AGVClient.AGVState.Idle + "}"); // Set the AGV state to Idle
+            await _agvClient.GetStatus();
+            Assert.IsTrue(_agvClient.CheckIsIdle());
+        }
+
+        [Test]
+        public async Task CheckIsIdle_ReturnsFalse_WhenStateIsNotIdle()
+        {
+            _fakeHttpMessageHandler.SetResponseContent("{\"state\": " + (int)AGVClient.AGVState.Executing + "}"); // Set the AGV state to Executing
+            await _agvClient.GetStatus();
+            Assert.IsFalse(_agvClient.CheckIsIdle());
+        }
     }
 
     public class FakeHttpMessageHandler : HttpMessageHandler
     {
         private string _responseContent = string.Empty;
+        private HttpStatusCode _statusCode = HttpStatusCode.OK;
         public HttpRequestMessage? LastRequest { get; private set; }
 
         // Method to set the response content for the fake HTTP message handler.
@@ -136,11 +156,18 @@ namespace AssemblyLineManager.Tests
             _responseContent = responseContent;
         }
 
+        // Method to set the response content and status code for the fake HTTP message handler.
+        public void SetResponse(HttpStatusCode statusCode, string responseContent)
+        {
+            _responseContent = responseContent;
+            _statusCode = statusCode;
+        }
+
         // Method to intercept and mock the HTTP requests for unit testing.
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             LastRequest = request;
-            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            var response = new HttpResponseMessage(_statusCode)
             {
                 Content = new StringContent(_responseContent)
             };

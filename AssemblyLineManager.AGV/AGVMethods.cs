@@ -86,7 +86,7 @@ namespace AssemblyLineManager.AGV
         }
 
         // Send currently active PUT request (Load, Execute)
-        private string SendPutRequest(object payload)
+        public string SendPutRequest(object payload)
         {
             // Check if the status thread has finished checking the status
             if (!CheckIsIdle())
