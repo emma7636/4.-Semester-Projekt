@@ -2,7 +2,6 @@ using System.Net;
 using AssemblyLineManager.AGV;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
-using System.Text;
 
 namespace AssemblyLineManager.Tests
 {
