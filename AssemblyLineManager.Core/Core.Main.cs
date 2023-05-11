@@ -10,8 +10,9 @@ namespace AssemblyLineManager.Core;
 
 public partial class Core
 {
-    static readonly Dictionary<string, ICommunicationController> instances = new Dictionary<string, ICommunicationController>();
+    readonly Dictionary<string, ICommunicationController> instances = new Dictionary<string, ICommunicationController>();
     AssemblyLineThreadManager assemblyLineThreadManager;
+    string customLibraryPath = "";
 
     public Core()
     {
@@ -24,6 +25,13 @@ public partial class Core
                 Console.WriteLine("woohoo");
             }
         }*/
+        assemblyLineThreadManager = new AssemblyLineThreadManager(instances);
+    }
+
+    public Core(string customLibraryPath)
+    {
+        this.customLibraryPath = customLibraryPath;
+        LoadModules();
         assemblyLineThreadManager = new AssemblyLineThreadManager(instances);
     }
 
@@ -79,18 +87,18 @@ public partial class Core
         }
     }
 
-    static void LoadModules()
+    void LoadModules()
     {
         List<ICommunicationController> instances = new List<ICommunicationController>();
-        Assembly.LoadFrom(@"bin/Debug/net7.0/AssemblyLineManager.AGV.dll");
-        Assembly.LoadFrom(@"bin/Debug/net7.0/AssemblyLineManager.AssemblyStation.dll");
-        Assembly.LoadFrom(@"bin/Debug/net7.0/AssemblyLineManager.Warehouse.dll");
+        Assembly.LoadFrom(customLibraryPath + @"AssemblyLineManager.AGV.dll");
+        Assembly.LoadFrom(customLibraryPath + @"AssemblyLineManager.AssemblyStation.dll");
+        Assembly.LoadFrom(customLibraryPath + @"AssemblyLineManager.Warehouse.dll");
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
         var types = assemblies.SelectMany(a => a.GetTypes()).Where(t => typeof(ICommunicationController).IsAssignableFrom(t) && t.IsClass);
         instances.AddRange(types.Select(t => Activator.CreateInstance(t)).OfType<ICommunicationController>());
         foreach (var instance in instances)
         {
-            Core.instances.Add(instance.Name, instance);
+            this.instances.Add(instance.Name, instance);
         }
     }
 }
