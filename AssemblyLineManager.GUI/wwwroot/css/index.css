@@ -22,7 +22,7 @@
         color: white;
         font-size: 20px;
         font-weight: bold;
-        background-image: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+        background-image: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet, red);
         background-size: 1500% auto;
     }
 /* Define the rainbow animation */
@@ -38,5 +38,5 @@
 }
 
 #button_group button:hover {
-    animation: rainbow 3s ease infinite;
+    animation: rainbow 2s ease infinite;
 }
