@@ -12,24 +12,31 @@
     height: 10%;
     margin-left: -10px;
     margin-top: -10px;
-    border: 3px solid green;
+   /* border: 3px solid green;*/
 }
 
-#button_group button{
-    width: 20%;
-    height: 100%;
-    
+    #button_group button {
+        width: 19%;
+        height: 100%;
+        border: none;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        background-image: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+        background-size: 1500% auto;
+    }
+/* Define the rainbow animation */
+@keyframes rainbow {
+    0% {
+        background-position: 0% 50%;
+    }
+    /* The background position starts at 0% horizontally and 50% vertically */
+    100% {
+        background-position: 100% 50%;
+    }
+    /* The background position ends at 100% horizontally and 50% vertically */
 }
 
 #button_group button:hover {
-        background-image: linear-gradient(to right, red,yellow,green,blue,violet);
-}
-
-#button_group a {
-    display: block;
-    text-align: center;
-    width: 18%;
-    line-height: 100%;
-    float: right;
-    text-decoration: none;
+    animation: rainbow 3s ease infinite;
 }
