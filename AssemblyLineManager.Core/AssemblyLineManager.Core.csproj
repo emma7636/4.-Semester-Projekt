@@ -1,30 +1,40 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Library</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Title>ALM Core</Title>
-	<Authors>marc7636, bare.mikkel, alex, kimjelassen, LucasHermann, Kochemanden</Authors>
-	<PackageTags>library</PackageTags>
-    <Company />
-    <AssemblyName>AssemblyLineManager.Core</AssemblyName>
-	<PackageLicenseExpression>MIT</PackageLicenseExpression>
-	<PackageReadmeFile>README.md</PackageReadmeFile>
-	<Version>0.0.1</Version>
-  </PropertyGroup>
-
-  <ItemGroup>
-	<None Include="..\README.md">
-		<Pack>True</Pack>
-		<PackagePath>\</PackagePath>
-	</None>
-	<PackageReference Include="AssemblyLineManager.AGV" Version="0.0.1" />
-	<PackageReference Include="AssemblyLineManager.AssemblyStation" Version="0.0.1" />
-    <PackageReference Include="AssemblyLineManager.CommonLib" Version="1.1.1" />
-    <PackageReference Include="AssemblyLineManager.Warehouse" Version="0.0.1" />
-  </ItemGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>ALM Core</Title>
+		<Authors>marc7636, bare.mikkel, alex, kimjelassen, LucasHermann, Kochemanden</Authors>
+		<PackageTags>library</PackageTags>
+		<Company />
+		<AssemblyName>AssemblyLineManager.Core</AssemblyName>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<Version>0.0.1</Version>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<ProjectReference Include="..\AssemblyLineManager.AGV\AssemblyLineManager.AGV.csproj" />
+		<ProjectReference Include="..\AssemblyLineManager.AssemblyStation\AssemblyLineManager.AssemblyStation.csproj" />
+		<PackageReference Include="AssemblyLineManager.CommonLib" Version="1.4.0" />
+		<ProjectReference Include="..\AssemblyLineManager.Warehouse\AssemblyLineManager.Warehouse.csproj" />
+		
+		<Content Include="GetInventory.xml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="InsertItem.xml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="PickItem.xml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 
 </Project>
