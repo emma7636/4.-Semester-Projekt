@@ -38,6 +38,11 @@ public partial class Core
         assemblyLineThreadManager.ResumeThread();
     }
 
+    public string[] GetModules()
+    {
+        return instances.Keys.ToArray();
+    }
+
     public Dictionary<string, KeyValuePair<string, string>[]> GetStates()
     {
         Dictionary<string, KeyValuePair<string, string>[]> states = new Dictionary<string, KeyValuePair<string, string>[]>();
@@ -51,6 +56,18 @@ public partial class Core
     public KeyValuePair<string, string>[] GetState(string moduleName)
     {
         return instances[moduleName].GetState();
+    }
+
+    public KeyValuePair<int, string>[]? GetInventory(string moduleName)
+    {
+        if (instances[moduleName] is ICommunicationControllerWithInventory)
+        {
+            return ((ICommunicationControllerWithInventory)instances[moduleName]).GetInventory();
+        }
+        else
+        {
+            return null;
+        }
     }
 
     static void LoadModules()
