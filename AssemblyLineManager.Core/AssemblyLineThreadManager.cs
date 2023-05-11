@@ -21,10 +21,9 @@ namespace AssemblyLineManager.Core
             thread = new Thread(AssemblyLineThread);
         }
 
-        public void Start()
+        public void StartThread()
         {
             thread.Start();
-            thread.Join();
         }
 
         public void ResumeThread()
@@ -35,6 +34,13 @@ namespace AssemblyLineManager.Core
         public void PauseThread()
         {
             manualResetEvent.Reset();
+        }
+
+        public void StopThread()
+        {
+            manualResetEvent.Reset();
+            thread.Interrupt();
+            thread.Join();
         }
 
         public void AssemblyLineThread()

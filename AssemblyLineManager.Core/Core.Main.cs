@@ -25,7 +25,11 @@ public partial class Core
             }
         }*/
         assemblyLineThreadManager = new AssemblyLineThreadManager(instances);
-        assemblyLineThreadManager.Start();
+    }
+
+    public void StartAssemblyLine()
+    {
+        assemblyLineThreadManager.StartThread();
     }
 
     public void PauseAssemblyLine()
@@ -36,6 +40,11 @@ public partial class Core
     public void ResumeAssemblyLine()
     {
         assemblyLineThreadManager.ResumeThread();
+    }
+
+    public void StopAssemblyLine()
+    {
+        assemblyLineThreadManager.StopThread();
     }
 
     public string[] GetModules()
