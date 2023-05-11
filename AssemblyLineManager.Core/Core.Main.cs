@@ -10,11 +10,22 @@ namespace AssemblyLineManager.Core;
 
 public partial class Core
 {
+    private static Core? instance;
+
     readonly Dictionary<string, ICommunicationController> instances = new Dictionary<string, ICommunicationController>();
     AssemblyLineThreadManager assemblyLineThreadManager;
     string customLibraryPath = "";
 
-    public Core()
+    public static Core Instance(string customLibraryPath = "")
+    {
+        if (instance == null)
+        {
+            instance = new Core(customLibraryPath);
+        }
+        return instance;
+    }
+
+    internal Core()
     {
         LoadModules();
         /*foreach (var instance in instances)
@@ -28,7 +39,7 @@ public partial class Core
         assemblyLineThreadManager = new AssemblyLineThreadManager(instances);
     }
 
-    public Core(string customLibraryPath)
+    private Core(string customLibraryPath)
     {
         this.customLibraryPath = customLibraryPath;
         LoadModules();

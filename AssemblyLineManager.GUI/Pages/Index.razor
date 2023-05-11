@@ -1,5 +1,5 @@
 @page "/"
-@using AssemblyLineManager.Core;
+@inject Core.Core core;
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,7 +26,6 @@
 </html>
 
 @code {
-    Core core = new Core();
     void Start()
     {
         core.StartAssemblyLine();
