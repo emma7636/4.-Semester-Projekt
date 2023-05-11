@@ -15,7 +15,7 @@
     <div id="button_group">
         <button @onclick="Start">Start</button>
         <button @onclick="Stop">Stop</button>
-        <button @onclick="Pause">Pause</button>
+        <button @onclick="Pause">@changeButtonText</button>
         <button @onclick="Clear">Clear</button>
         <a href="machine_info">
             <button>Machine info</button>
@@ -26,20 +26,34 @@
 </html>
 
 @code {
+    [Parameter]
+    public string changeButtonText { get; set; } = "Pause";
+
     void Start()
     {
         core.StartAssemblyLine();
     }
     void Stop()
     {
-
+        core.StopAssemblyLine();
     }
     void Pause()
     {
-
+        if (core.isRunning())
+        {
+            core.PauseAssemblyLine();
+            changeButtonText = "Resume";
+        }
+        else
+        {
+            core.ResumeAssemblyLine();
+            changeButtonText = "Pause";
+        }
+        InvokeAsync(() => StateHasChanged());
     }
     void Clear()
     {
-
+        if (!core.isRunning())
+            core.StopAssemblyLine();
     }
 }

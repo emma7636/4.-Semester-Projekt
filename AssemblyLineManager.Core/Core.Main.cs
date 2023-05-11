@@ -45,7 +45,10 @@ public partial class Core
         LoadModules();
         assemblyLineThreadManager = new AssemblyLineThreadManager(instances);
     }
-
+    public bool isRunning()
+    {
+        return assemblyLineThreadManager.isRunning();
+    }
     public void StartAssemblyLine()
     {
         assemblyLineThreadManager.StartThread();

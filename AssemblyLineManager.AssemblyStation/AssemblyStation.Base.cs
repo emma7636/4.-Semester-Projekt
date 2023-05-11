@@ -85,7 +85,11 @@ public partial class AssemblyStation : ICommunicationController
                         Console.WriteLine("CheckHealth packet didn't arrive, is everything okay?\nContinuing...");
                         return false;
                     }
-                    Thread.Sleep(100);
+                    try
+                    {
+                        Thread.Sleep(100);
+                    }
+                    catch (ThreadInterruptedException){ }
                 }
                 return latestCheckHealth.IsHealthy; //Return the success of the assembled product
             }

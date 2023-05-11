@@ -21,8 +21,14 @@ namespace AssemblyLineManager.Core
             thread = new Thread(AssemblyLineThread);
         }
 
+        public bool isRunning()
+        {
+            return manualResetEvent.WaitOne(0);
+        }
         public void StartThread()
         {
+            manualResetEvent.Set();
+            thread = new Thread(AssemblyLineThread);
             thread.Start();
         }
 
