@@ -29,6 +29,7 @@ namespace AssemblyLineManager.Warehouse
     }
     public class Warehouse : ICommunicationControllerWithInventory
     {
+        //Gets the path of this class locally
         static string? path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         private static HttpClient client = new HttpClient();
         private static bool connected = false;
@@ -79,6 +80,13 @@ namespace AssemblyLineManager.Warehouse
             HttpResponseMessage response = await client.PostAsync("/Service.asmx", SetSC(xmlName));
             return response;
         }
+        /**
+         * Checks an HttpResponseMessage from InsertItem or PickItem and checks if it sends back one of the error messages.
+         * 
+         * @param HttpResponseMessage response
+         * 
+         * @return bool
+         */
         private static bool CommandChecker(HttpResponseMessage response)
         {
             XmlDocument doc = new XmlDocument();
@@ -273,7 +281,6 @@ namespace AssemblyLineManager.Warehouse
                 {
                     string itemName = commandParameters[1];
                     HttpResponseMessage response = InsertItem(itemId, itemName).GetAwaiter().GetResult();
-                    HttpResponseMessage response1 = response;
                     if (CommandChecker(response)) {
                         return true;
                     }
