@@ -18,35 +18,35 @@
             <h3>State</h3>
             <p id="Wstate">@Warehouse_state</p>
             <h3>Timestamp</h3>
-            <p id="Wtimestamp">timestamp</p>
+            <p id="Wtimestamp">@Warehouse_timestamp</p>
             <h3>Inventory</h3>
+            <p> @Warehouse_Inventory</p>
 
         </div>
 
         <div class="mci" id="AGV">
             <h1>AGV</h1>
             <h3>State</h3>
-            <p id="Astate"></p>
+            <p id="Astate">@AGV_state</p>
             <h3>Battery</h3>
-            <p id="Abattery">battery</p>
+            <p id="Abattery">@AGV_battery</p>
             <h3>Program</h3>
-            <p id="Aprogram">program</p>
+            <p id="Aprogram">@AGV_program</p>
             <h3>Timestamp</h3>
-            <p id="Atimestamp">timestamp</p>
+            <p id="Atimestamp">@AGV_timestamp</p>
         </div>
 
         <div class="mci" id="Assemblystation">
             <h1>Assemblystation</h1>
             <h3>State</h3>
-            <p id="ASstate">state</p>
+            <p id="ASstate">@Assembly_station_state</p>
+            <h3>Current operation</h3>
+            <p id="ASC_operation">@Assembly_station_cOperation</p>
             <h3>Last operation</h3>
-            <p id="ASl_operation">last operation</p>
+            <p id="ASl_operation">@Assembly_station_lOperation</p>
             <h3>Timestamp</h3>
-            <p id="AStimestamp">timestamp</p>
-            <h3>Health</h3>
-            <p id="AShealth">health</p>
+            <p id="AStimestamp">@Assembly_station_timestamp</p>
         </div>
-        <button @onclick="refresh">Refresh</button>
     </div>
 
 </body>
@@ -56,28 +56,53 @@
 
 @code {
     [Parameter]
-    public string Warehouse_state { get; set; } = "test";
+    //Warehouse
+    public string Warehouse_state { get; set; } = "";
+    public string Warehouse_timestamp { get; set; } = "";
+    public string Warehouse_Inventory { get; set; } = "";
+    //Assembly station
+    public string Assembly_station_state { get; set; } = "";
+    public string Assembly_station_lOperation { get; set; } = "";
+    public string Assembly_station_cOperation { get; set; } = "";
+    public string Assembly_station_timestamp { get; set; } = "";
+    //AGV
+    public string AGV_state { get; set; } = "";
+    public string AGV_battery { get; set; } = "";
+    public string AGV_program { get; set; } = "";
+    public string AGV_timestamp { get; set; } = "";
 
     private void update_warehouse()
     {
-
-        Warehouse_state = core.GetState("Warehouse")["State: "];
-        InvokeAsync(() => StateHasChanged());
-        Console.WriteLine("Cock and ball torture");
+        //Warehouse_state = core.GetState("Warehouse")["State: "];
+        Warehouse_timestamp = core.GetState("Warehouse")["timestamp"];
+        // Warehouse_Inventory = core.GetInventory("Warehouse");
     }
 
-    public void refresh()
+    private void update_agv()
     {
-        Console.WriteLine("Cock and ball torture");
-        //update_warehouse();    
+        AGV_state = core.GetState("AGV")["state"];
+        AGV_battery = core.GetState("AGV")["battery"];
+        AGV_program = core.GetState("AGV")["program name"];
+        AGV_timestamp = core.GetState("AGV")["timestamp"];
+        InvokeAsync(() => StateHasChanged());
+    }
+
+    private void update_assembly()
+    {
+        Assembly_station_state = core.GetState("AssemblyStation")["state"];
+        Assembly_station_lOperation = core.GetState("AssemblyStation")["lastOperation"];
+        Assembly_station_cOperation = core.GetState("AssemblyStation")["currentOperation"];
+        Assembly_station_timestamp = core.GetState("AssemblyStation")["timeStamp"];
+        InvokeAsync(() => StateHasChanged());
     }
 
     protected override void OnAfterRender(bool firstRender)
     {
         if(firstRender)
         {
-            Console.WriteLine("f");
-           InvokeAsync(() => update_warehouse());
+           // InvokeAsync(() => update_warehouse());
+            InvokeAsync(() => update_agv());
+            InvokeAsync(() => update_assembly());
         }
     }
 }

@@ -169,6 +169,7 @@ namespace AssemblyLineManager.Warehouse
         private static async Task<HttpResponseMessage> SendGetInventory()
         {
             HttpResponseMessage response = await client.PostAsync("/Service.asmx", SetSC("GetInventory.xml"));
+            Console.WriteLine(response.Content);  
             return response;
         }
         /**

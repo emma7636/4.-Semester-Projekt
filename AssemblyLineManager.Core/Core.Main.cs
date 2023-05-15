@@ -83,11 +83,10 @@ public partial class Core
 
     public Dictionary<string, string> GetState(string moduleName)
     {
-        Console.WriteLine("1");
+
         Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
         foreach (KeyValuePair<string, string> keyValuePair in instances[moduleName].GetState())
         {
-            Console.WriteLine("2");
             keyValuePairs.Add(keyValuePair.Key, keyValuePair.Value);
         }
         return keyValuePairs;
