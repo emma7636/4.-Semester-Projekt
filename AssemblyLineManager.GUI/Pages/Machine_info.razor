@@ -46,7 +46,7 @@
             <h3>Health</h3>
             <p id="AShealth">health</p>
         </div>
-        
+        <button @onclick="refresh">Refresh</button>
     </div>
 
 </body>
@@ -60,13 +60,24 @@
 
     private void update_warehouse()
     {
-        Warehouse_state = core.GetState("Warehouse")["state"];
-        Console.WriteLine(Warehouse_state);
+
+        Warehouse_state = core.GetState("Warehouse")["State: "];
+        InvokeAsync(() => StateHasChanged());
+        Console.WriteLine("Cock and ball torture");
     }
 
-
-    protected override async Task OnInitializedAsync()
+    public void refresh()
     {
-            update_warehouse();
+        Console.WriteLine("Cock and ball torture");
+        //update_warehouse();    
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if(firstRender)
+        {
+            Console.WriteLine("f");
+           InvokeAsync(() => update_warehouse());
+        }
     }
 }

@@ -292,7 +292,7 @@ namespace AssemblyLineManager.Warehouse
          */
         private static dynamic IterateInventory()
         {
-            HttpResponseMessage response = SendGetInventory().Result;
+            HttpResponseMessage response = SendGetInventory().GetAwaiter().GetResult();
             XmlDocument doc = new XmlDocument();
             doc.Load(response.Content.ReadAsStream());
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
