@@ -20,8 +20,8 @@ public interface ICommunicationController
     /// This method is used to get the current state of the machine utilised by the module.
     /// The state information shall be formatted as a list of information with each entry having a name and a value.
     /// </summary>
-    /// <returns>It shall return an array of key-value pairs, where the key is the name of the entry, and the value is the value of the entry.</returns>
-    public KeyValuePair<string, string>[] GetState();
+    /// <returns>It shall return a dictionary, where the key is the name of the entry, and the value is the value of the entry.</returns>
+    public Dictionary<string, string> GetState();
 
     /// <summary>
     /// This method is used to send a command to the machine utilised by the module.
