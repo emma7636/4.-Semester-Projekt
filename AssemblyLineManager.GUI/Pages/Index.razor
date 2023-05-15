@@ -39,7 +39,7 @@
     }
     void Pause()
     {
-        if (core.isRunning())
+        if (core.IsRunning())
         {
             core.PauseAssemblyLine();
             changeButtonText = "Resume";
@@ -53,7 +53,7 @@
     }
     void Clear()
     {
-        if (!core.isRunning())
+        if (!core.IsRunning())
             core.StopAssemblyLine();
     }
 }
