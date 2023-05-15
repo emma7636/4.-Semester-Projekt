@@ -84,9 +84,14 @@ public partial class Core
         return states;
     }
 
-    public KeyValuePair<string, string>[] GetState(string moduleName)
+    public Dictionary<string, string> GetState(string moduleName)
     {
-        return instances[moduleName].GetState();
+        Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
+        foreach (KeyValuePair<string, string> keyValuePair in instances[moduleName].GetState())
+        {
+            keyValuePairs.Append(keyValuePair);
+        }
+        return keyValuePairs;
     }
 
     public KeyValuePair<int, string>[]? GetInventory(string moduleName)
