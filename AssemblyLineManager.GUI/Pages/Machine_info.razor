@@ -1,4 +1,5 @@
 @page "/machine_info"
+@inject Core.Core core;
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,9 +16,9 @@
         <div class="mci" id="warehouse">
             <h1>Warehouse</h1>
             <h3>State</h3>
-            <p id="state">state</p>
+            <p id="Wstate">@Warehouse_state</p>
             <h3>Timestamp</h3>
-            <p id="timestamp">timestamp</p>
+            <p id="Wtimestamp">timestamp</p>
             <h3>Inventory</h3>
 
         </div>
@@ -25,25 +26,25 @@
         <div class="mci" id="AGV">
             <h1>AGV</h1>
             <h3>State</h3>
-            <p id="state">state</p>
+            <p id="Astate"></p>
             <h3>Battery</h3>
-            <p id="battery">battery</p>
+            <p id="Abattery">battery</p>
             <h3>Program</h3>
-            <p id="program">program</p>
+            <p id="Aprogram">program</p>
             <h3>Timestamp</h3>
-            <p id="timestamp">timestamp</p>
+            <p id="Atimestamp">timestamp</p>
         </div>
 
         <div class="mci" id="Assemblystation">
             <h1>Assemblystation</h1>
             <h3>State</h3>
-            <p id="state">state</p>
+            <p id="ASstate">state</p>
             <h3>Last operation</h3>
-            <p id="l_operation">last operation</p>
+            <p id="ASl_operation">last operation</p>
             <h3>Timestamp</h3>
-            <p id="timestamp">timestamp</p>
+            <p id="AStimestamp">timestamp</p>
             <h3>Health</h3>
-            <p id="health">health</p>
+            <p id="AShealth">health</p>
         </div>
         
     </div>
@@ -51,3 +52,21 @@
 </body>
 
 </html>
+
+
+@code {
+    [Parameter]
+    public string Warehouse_state { get; set; } = "test";
+
+    private void update_warehouse()
+    {
+        Warehouse_state = core.GetState("Warehouse")["state"];
+        Console.WriteLine(Warehouse_state);
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+            update_warehouse();
+    }
+}
