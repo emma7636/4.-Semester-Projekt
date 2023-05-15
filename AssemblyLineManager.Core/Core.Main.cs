@@ -18,10 +18,7 @@ public partial class Core
 
     public static Core Instance(string customLibraryPath = "")
     {
-        if (instance == null)
-        {
-            instance = new Core(customLibraryPath);
-        }
+        instance ??= new Core(customLibraryPath);
         return instance;
     }
 
@@ -45,7 +42,7 @@ public partial class Core
         LoadModules();
         assemblyLineThreadManager = new AssemblyLineThreadManager(instances);
     }
-    public bool isRunning()
+    public bool IsRunning()
     {
         return assemblyLineThreadManager.isRunning();
     }
@@ -91,16 +88,16 @@ public partial class Core
         foreach (KeyValuePair<string, string> keyValuePair in instances[moduleName].GetState())
         {
             Console.WriteLine("2");
-            keyValuePairs.Append(keyValuePair);
+            keyValuePairs.Add(keyValuePair.Key, keyValuePair.Value);
         }
         return keyValuePairs;
     }
 
     public KeyValuePair<int, string>[]? GetInventory(string moduleName)
     {
-        if (instances[moduleName] is ICommunicationControllerWithInventory)
+        if (instances[moduleName] is ICommunicationControllerWithInventory inventory)
         {
-            return ((ICommunicationControllerWithInventory)instances[moduleName]).GetInventory();
+            return inventory.GetInventory();
         }
         else
         {
