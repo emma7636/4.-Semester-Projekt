@@ -168,8 +168,7 @@ namespace AssemblyLineManager.Warehouse
          */
         private static async Task<HttpResponseMessage> SendGetInventory()
         {
-            HttpResponseMessage response = await client.PostAsync("/Service.asmx", SetSC("GetInventory.xml"));
-            Console.WriteLine(response.Content);  
+            HttpResponseMessage response = client.PostAsync("/Service.asmx", SetSC("GetInventory.xml")).GetAwaiter().GetResult();
             return response;
         }
         /**
@@ -229,7 +228,6 @@ namespace AssemblyLineManager.Warehouse
             {
                 inventory.Add(new KeyValuePair<int, string>(item.Id, item.Content));
             }
-            //KeyValuePair<int, string>[] newInventory = inventory.ToArray();
 
             return inventory.ToArray();
         }
@@ -242,11 +240,11 @@ namespace AssemblyLineManager.Warehouse
         {
             dynamic dyna = IterateInventory();
             int state = (int)dyna["State"];
-            List<KeyValuePair<string, string>> stateList = new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>("State: ", state.ToString())
-            };
-            return stateList.ToArray();
+            string timestamp = (string)dyna["DateTime"];
+            KeyValuePair<string, string>[] key = new KeyValuePair<string, string>[2];
+            key[0] = new KeyValuePair<string, string>("state", state.ToString());
+            key[1] = new KeyValuePair<string, string>("timestamp", timestamp);
+            return key;
         }
         /**
          * Sends commands to the machine from the front end

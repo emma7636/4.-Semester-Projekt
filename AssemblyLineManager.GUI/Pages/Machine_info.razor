@@ -20,7 +20,19 @@
             <h3>Timestamp</h3>
             <p>@Warehouse_timestamp</p>
             <h3>Inventory</h3>
-            <p> @Warehouse_Inventory</p>
+            <ol>
+                @foreach(var item in Warehouse_Inventory)
+                {
+                    @if (item.Value == "")
+                    {
+                        <li>Empty</li>
+                    }
+                    else
+                    {
+                        <li>@item.Value</li>
+                    }
+                }
+            </ol>
         </div>
 
         <div class="mci" id="AGV">
@@ -58,7 +70,8 @@
     //Warehouse
     public string Warehouse_state { get; set; } = "";
     public string Warehouse_timestamp { get; set; } = "";
-    public string Warehouse_Inventory { get; set; } = "";
+    public Dictionary<int, string> Warehouse_Inventory { get; set; } = new Dictionary<int, string>();
+    public string Inventory { get; set; } = "";
     //Assembly station
     public string Assembly_station_state { get; set; } = "";
     public string Assembly_station_lOperation { get; set; } = "";
@@ -72,11 +85,11 @@
 
     private void update_warehouse()
     {
-        //Warehouse_state = core.GetState("Warehouse")["State: "];
+        Warehouse_state = core.GetState("Warehouse")["state"];
         Warehouse_timestamp = core.GetState("Warehouse")["timestamp"];
-        // Warehouse_Inventory = core.GetInventory("Warehouse");
+        Warehouse_Inventory = core.GetInventory("Warehouse");
+        InvokeAsync(() => StateHasChanged());
     }
-
     private void update_agv()
     {
         AGV_state = core.GetState("AGV")["state"];
@@ -99,9 +112,10 @@
     {
         if(firstRender)
         {
-           // InvokeAsync(() => update_warehouse());
             InvokeAsync(() => update_agv());
             InvokeAsync(() => update_assembly());
+            InvokeAsync(() => update_warehouse());
+          
         }
     }
 }

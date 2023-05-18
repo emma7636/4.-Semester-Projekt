@@ -10,8 +10,7 @@ namespace AssemblyLineManager.Warehouse
     {
         //For testing purposes
         static void Main(string[] args)
-        {
-            
+        { 
         } 
 
     }

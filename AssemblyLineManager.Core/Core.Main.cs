@@ -1,4 +1,5 @@
 ﻿using AssemblyLineManager.CommonLib;
+using AssemblyLineManager.Warehouse;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -83,24 +84,29 @@ public partial class Core
 
     public Dictionary<string, string> GetState(string moduleName)
     {
-
         Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
         foreach (KeyValuePair<string, string> keyValuePair in instances[moduleName].GetState())
         {
             keyValuePairs.Add(keyValuePair.Key, keyValuePair.Value);
         }
         return keyValuePairs;
+        
     }
 
-    public KeyValuePair<int, string>[]? GetInventory(string moduleName)
+    public Dictionary<int, string> GetInventory(string moduleName)
     {
+        Dictionary<int, string> dick = new Dictionary<int, string>();
         if (instances[moduleName] is ICommunicationControllerWithInventory inventory)
         {
-            return inventory.GetInventory();
+            foreach (KeyValuePair<int, string> kvp in inventory.GetInventory())
+            {
+                dick.Add(kvp.Key, kvp.Value);
+            }
+            return dick;
         }
         else
         {
-            return null;
+            return dick;
         }
     }
 
