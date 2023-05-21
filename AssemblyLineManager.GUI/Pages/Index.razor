@@ -29,9 +29,9 @@
     [Parameter]
     public string changeButtonText { get; set; } = "Pause";
 
-    void Start()
+    void Start(bool allItems, int id =0)
     {
-        core.StartAssemblyLine();
+        core.StartAssemblyLine(allItems,id);
     }
     void Stop()
     {

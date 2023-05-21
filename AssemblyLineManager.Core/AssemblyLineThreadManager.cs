@@ -25,7 +25,13 @@ namespace AssemblyLineManager.Core
         {
             return manualResetEvent.WaitOne(0);
         }
-        public void StartThread(bool allItems, int id = 0)
+        /**
+        * Starts the production thread, checks if it needs to assemble all items or just the given id
+        * 
+        * @param bool allItems
+        * @param int id = 0
+        */
+        public void StartThread(bool allItems, int id)
         {
             manualResetEvent.Set();
             if (allItems)
@@ -85,6 +91,9 @@ namespace AssemblyLineManager.Core
                 }
             }
         }
+        /**
+         * Runs the assembly function on all current spaces in the Warehouse inventory
+         */
         public void AssemblyLineThreadAll()
         {
             for (int i = 1; i < 11; i++)

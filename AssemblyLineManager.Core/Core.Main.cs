@@ -2,6 +2,7 @@
 using AssemblyLineManager.Warehouse;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -47,9 +48,9 @@ public partial class Core
     {
         return assemblyLineThreadManager.isRunning();
     }
-    public void StartAssemblyLine()
+    public void StartAssemblyLine(bool allItems, int id)
     {
-        assemblyLineThreadManager.StartThread(true);
+        assemblyLineThreadManager.StartThread(allItems, id);
     }
 
     public void PauseAssemblyLine()
