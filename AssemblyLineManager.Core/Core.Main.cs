@@ -49,7 +49,7 @@ public partial class Core
     }
     public void StartAssemblyLine()
     {
-        assemblyLineThreadManager.StartThread();
+        assemblyLineThreadManager.StartThread(true);
     }
 
     public void PauseAssemblyLine()
