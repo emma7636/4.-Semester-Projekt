@@ -259,26 +259,13 @@ namespace AssemblyLineManager.Warehouse
                 if (command == "Pick Item")
                 {
                     HttpResponseMessage response = PickItem(itemId).GetAwaiter().GetResult();
-                    if (CommandChecker(response))
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }     
+                    return CommandChecker(response);
                 }
                 else if (command == "Insert Item")
                 {
                     string itemName = commandParameters[1];
                     HttpResponseMessage response = InsertItem(itemId, itemName).GetAwaiter().GetResult();
-                    HttpResponseMessage response1 = response;
-                    if (CommandChecker(response)) {
-                        return true;
-                    }
-                    else {
-                        return false;
-                    }
+                    return CommandChecker(response);
                 }
             }
             return false;
