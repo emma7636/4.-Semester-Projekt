@@ -1,0 +1,66 @@
+@page "/Options"
+@inject Core.Core core;
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Info</title>
+</head>
+
+<body>
+    <div>
+        <label for="endless"> Endless production</label><br />
+        <input type="checkbox" id="endless" @bind="endless"> <br />
+        <label for="Item_index">Select which item to craft?</label><br />
+        <select name="Item_index" id="choice" @bind="itemChoice">
+            @foreach (var item in Warehouse_Inventory)
+            {
+                Console.WriteLine(item.Key);
+                @if (item.Value == "")
+                {
+                    <option value="@item.Key">Empty</option>
+                }
+                else
+                {
+                    <option value="@item.Key">@item.Value</option>
+                }
+
+            }
+        </select>
+        <a href="/">
+            <button @onclick="Start">Start Production</button>
+        </a>
+    </div>
+</body>
+
+</html>
+
+
+@code {
+    public Dictionary<int, string> Warehouse_Inventory { get; set; } = new Dictionary<int, string>();
+
+    private int itemChoice { get; set; } = 0;
+    private bool endless { get; set; } = true;
+
+    void Start()
+    {
+        core.StartAssemblyLine(endless, itemChoice);
+    }
+
+    void getInventory()
+    {
+        Warehouse_Inventory = core.GetInventory("Warehouse");
+        InvokeAsync(() => StateHasChanged());
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            InvokeAsync(() => getInventory());
+        }
+    }
+}
