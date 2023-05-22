@@ -12,13 +12,11 @@
 
 <body>
     <div>
-        <label for="endless"> Endless production</label><br />
+        <label for="endless">Assemble all pieces</label><br />
         <input type="checkbox" id="endless" @bind="endless"> <br />
-        <label for="Item_index">Select which item to craft?</label><br />
-        <select name="Item_index" id="choice" @bind="itemChoice">
+        <label for="Item_index">Choose specific item to be assembled</label><br />
+        <select name="Item_index" id="choice" @bind="itemChoice" disabled="@endless">
             @foreach (var item in Warehouse_Inventory)
-            {
-                Console.WriteLine(item.Key);
                 @if (item.Value == "")
                 {
                     <option value="@item.Key">Empty</option>
