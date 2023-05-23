@@ -10,6 +10,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton(Core.Instance("./bin/Debug/net7.0/"));
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

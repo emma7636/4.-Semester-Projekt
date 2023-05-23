@@ -1,5 +1,6 @@
 @page "/Options"
 @inject Core.Core core;
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -41,11 +42,12 @@
     public Dictionary<int, string> Warehouse_Inventory { get; set; } = new Dictionary<int, string>();
 
     private int itemChoice { get; set; } = 0;
-    private bool endless { get; set; } = true;
+    private bool endless { get; set; } = false;
 
     void Start()
     {
         core.StartAssemblyLine(endless, itemChoice);
+        
     }
 
     void getInventory()

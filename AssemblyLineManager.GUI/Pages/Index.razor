@@ -1,5 +1,6 @@
 @page "/"
 @inject Core.Core core;
+@inject IJSRuntime jsRuntime;
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,25 +14,10 @@
 
 <body>
     <div id="button_group">
-        <a href="Options">
-            <button>Start</button>
-        </a>
-        <button @onclick="Stop">Stop</button>
+        <button @onclick="StartAndStop">@startStopText</button>
         <button @onclick="Pause">@changeButtonText</button>
-        <button @onclick="Clear">Clear</button>
+        <button @onclick="Clear">Clear queue</button>
     </div>
-    
-    <!--<div>
-        <label for="endless"> Endless production</label><br />
-        <input type="checkbox" id="endless" @bind="endless"> <br />
-        <label for="Item_index">Select which item to craft</label><br />
-        <select name="Item_index" id="choice" @bind="itemChoice">
-            @foreach (var item in Warehouse_Inventory)
-            {
-                <option value="@item.Key">@item.Value</option>
-            }
-        </select>
-    </div>-->
 
     <div id="wrapper">
         <div class="mci" id="warehouse">
@@ -87,6 +73,7 @@
 @code {
     [Parameter]
     public string changeButtonText { get; set; } = "Pause";
+    public string startStopText { get; set; } = "Start";
 
     //Warehouse
     public string Warehouse_state { get; set; } = "";
@@ -107,14 +94,27 @@
     private int itemChoice { get; set; } = 0;
     private bool endless { get; set; } = true;
 
-    void Start()
+    void StartAndStop()
     {
-        core.StartAssemblyLine(endless,itemChoice);
-   
+        if(core.IsRunning())
+        {
+            core.StopAssemblyLine();
+        } else
+        {
+            jsRuntime.InvokeAsync<object>("open", "Options");
+        }   
     }
-    void Stop()
+    void changeStartStopButton()
     {
-        core.StopAssemblyLine();
+        if (core.IsRunning())
+        {
+            startStopText = "Stop production";
+        }
+        else
+        {
+            startStopText = "Start production";
+        }
+        InvokeAsync(() => StateHasChanged());
     }
     void Pause()
     {
@@ -168,7 +168,7 @@
             InvokeAsync(() => update_agv());
             InvokeAsync(() => update_assembly());
             InvokeAsync(() => update_warehouse());
-
+            InvokeAsync(() => changeStartStopButton());
         }
     }
 }

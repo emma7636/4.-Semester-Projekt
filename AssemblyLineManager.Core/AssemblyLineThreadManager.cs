@@ -12,7 +12,7 @@ namespace AssemblyLineManager.Core
     {
         Dictionary<string, ICommunicationController> instances;
         Thread thread;
-        ManualResetEvent manualResetEvent = new ManualResetEvent(true);
+        ManualResetEvent manualResetEvent = new ManualResetEvent(false);
 
         public AssemblyLineThreadManager(Dictionary<string, ICommunicationController> instances)
         {
@@ -90,6 +90,7 @@ namespace AssemblyLineManager.Core
                     Console.WriteLine(operation.Method.ToString() + " did not complete successfully!");
                 }
             }
+            manualResetEvent.Reset();
         }
         /**
          * Runs the assembly function on all current spaces in the Warehouse inventory
