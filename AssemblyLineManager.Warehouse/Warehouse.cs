@@ -32,8 +32,12 @@ namespace AssemblyLineManager.Warehouse
         static string? path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         private static HttpClient client = new HttpClient();
         private static bool connected = false;
+        private static Dictionary<int, string> stateLUT = new Dictionary<int, string>();
         public Warehouse()
         {
+            stateLUT.Add(0, "Idle");
+            stateLUT.Add(1, "Executing");
+            stateLUT.Add(2, "Error");
             RunAsync().Wait();
         }
         public static bool Connected
@@ -242,7 +246,7 @@ namespace AssemblyLineManager.Warehouse
             int state = (int)dyna["State"];
             string timestamp = (string)dyna["DateTime"];
             KeyValuePair<string, string>[] key = new KeyValuePair<string, string>[2];
-            key[0] = new KeyValuePair<string, string>("state", state.ToString());
+            key[0] = new KeyValuePair<string, string>("state", stateLUT[state]);
             key[1] = new KeyValuePair<string, string>("timestamp", timestamp);
             return key;
         }

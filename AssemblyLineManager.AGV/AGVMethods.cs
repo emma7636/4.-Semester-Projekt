@@ -13,6 +13,7 @@ namespace AssemblyLineManager.AGV
             Charging = 3
         }
 
+
         public bool CheckIsIdle()
         {
             string statusJson = GetStatus().GetAwaiter().GetResult();

@@ -1,5 +1,6 @@
 using AssemblyLineManager.CommonLib;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -13,11 +14,17 @@ namespace AssemblyLineManager.AGV
 
 
         public AGVClient() => httpClient = new HttpClient();
-
+        private static Dictionary<int, string> stateLUT = new Dictionary<int, string>()
+        {
+            {1, "Idle" },
+            {2, "Executing" },
+            {3, "Charging" }
+        };
         // Constructor that accepts an HttpClient parameter
         public AGVClient(HttpClient httpClient)
         {
             this.httpClient = httpClient;
+
         }
 
         public string Name
@@ -30,18 +37,29 @@ namespace AssemblyLineManager.AGV
 
         //ICommunicationController methods implemented
         public KeyValuePair<string, string>[] GetState()
-        {
+        {   
             AGVClient agvClient = new AGVClient();
-            var status = agvClient.GetStatus().Result;
-            //Deserialize the JSON Object to a dictionary
-            var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(status);
             
+            var status = agvClient.GetStatus().Result;
+            dynamic dyna = JObject.Parse(status);
+            int battery = (int)dyna["battery"];
+            string program = (string)dyna["program name"];
+            int state = (int)dyna["state"];
+            string timestamp = (string)dyna["timestamp"];
+            //Deserialize the JSON Object to a dictionary
+            //var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(status);
+            KeyValuePair<string, string>[] stateArray = new KeyValuePair<string, string>[4];
+            stateArray[0] = new KeyValuePair<string, string>("battery", battery.ToString());
+            stateArray[1] = new KeyValuePair<string, string>("program name", program);
+            stateArray[2] = new KeyValuePair<string, string>("state", stateLUT[state]);
+            stateArray[3] = new KeyValuePair<string, string>("timestamp", timestamp.ToString());
+
             //Console.WriteLine("Test Dictionary Solution + \n");
-       
-            if (dict != null)
+
+            if (stateArray != null)
             {
                 // Makes the dictionary into an array to match the desired return datatype for this method.
-                var list = dict.ToArray();
+                //var list = dict.ToArray();
                 /*// Not important but nice to see what is in the dictionary
                 foreach (var kv in list)
                 {
@@ -49,7 +67,8 @@ namespace AssemblyLineManager.AGV
                    
                 }*/
 
-                return list;
+                //return list;
+                return stateArray;
             }
             // In the event we are unable to obtain the information from the AGV. This may be restructured so that a null case is handled elsewhere.
 
