@@ -1,12 +1,5 @@
 ﻿using AssemblyLineManager.CommonLib;
-using AssemblyLineManager.Warehouse;
-using System;
-using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AssemblyLineManager.Core;
 

@@ -1,47 +1,47 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Library</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Title>ALM Warehouse</Title>
-	<Authors>marc7636, bare.mikkel, alex, kimjelassen, LucasHermann, Kochemanden</Authors>
-	<PackageTags>library</PackageTags>
-    <Company />
-    <AssemblyName>AssemblyLineManager.Warehouse</AssemblyName>
-	<PackageLicenseExpression>MIT</PackageLicenseExpression>
-	<PackageReadmeFile>README.md</PackageReadmeFile>
-	<Version>1.4.0</Version>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Library</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <Title>ALM Warehouse</Title>
+        <Authors>marc7636, bare.mikkel, alex, kimjelassen, LucasHermann, Kochemanden</Authors>
+        <PackageTags>library</PackageTags>
+        <Company />
+        <AssemblyName>AssemblyLineManager.Warehouse</AssemblyName>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <Version>1.5.0</Version>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="GetInventory.xml" />
-    <None Remove="InsertItem.xml" />
-    <None Remove="NewFile1.txt" />
-    <None Remove="PickItem.xml" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="GetInventory.xml" />
+        <None Remove="InsertItem.xml" />
+        <None Remove="NewFile1.txt" />
+        <None Remove="PickItem.xml" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="GetInventory.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="InsertItem.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="PickItem.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+    <ItemGroup>
+        <Content Include="GetInventory.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="InsertItem.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="PickItem.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 
-  <ItemGroup>
-	<None Include="..\README.md">
-		<Pack>True</Pack>
-		<PackagePath>\</PackagePath>
-	</None>
-    <PackageReference Include="AssemblyLineManager.CommonLib" Version="1.4.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Include="..\README.md">
+	        <Pack>True</Pack>
+	        <PackagePath>\</PackagePath>
+        </None>
+        <PackageReference Include="AssemblyLineManager.CommonLib" Version="1.4.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    </ItemGroup>
 
 </Project>
