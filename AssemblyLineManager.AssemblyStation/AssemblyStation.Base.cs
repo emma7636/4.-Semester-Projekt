@@ -7,6 +7,14 @@ public partial class AssemblyStation : ICommunicationController
 {
     private static Dictionary<int, string> stateLUT = new Dictionary<int, string>(); //Lookup table for the various states of the assembly station
 
+    public string Name
+    {
+        get
+        {
+            return "AssemblyStation";
+        }
+    }
+
     static AssemblyStation(){
         //Generate a lookup table for the various states
         stateLUT.Add(0, "Idle");
@@ -37,7 +45,7 @@ public partial class AssemblyStation : ICommunicationController
         return stateArray;
     }
 
-    public bool SendCommand(string machineName, string command, string[]? commandParameters = null)
+    public bool SendCommand(string command, string[]? commandParameters = null)
     {
         //Deleting old data so we don't get confused
         latestEcho = null;
@@ -77,7 +85,11 @@ public partial class AssemblyStation : ICommunicationController
                         Console.WriteLine("CheckHealth packet didn't arrive, is everything okay?\nContinuing...");
                         return false;
                     }
-                    Thread.Sleep(100);
+                    try
+                    {
+                        Thread.Sleep(100);
+                    }
+                    catch (ThreadInterruptedException){ }
                 }
                 return latestCheckHealth.IsHealthy; //Return the success of the assembled product
             }

@@ -1,12 +1,11 @@
-﻿/*
-    Author: ChatGPT
-*/
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
+/// <summary>
+/// Author: ChatGPT
+/// </summary>
 public interface IAnimal
 {
     void Speak();
@@ -28,7 +27,7 @@ public class Cat : IAnimal
     }
 }
 
-class Program
+/*class Program
 {
     static void Main(string[] args)
     {/*
@@ -41,7 +40,7 @@ class Program
         foreach (var animal in animals)
         {
             animal.Speak();
-        }*/
+        }*
         
         // Alternatively, you can use reflection to get a list of all available implementations of the interface
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -55,3 +54,4 @@ class Program
         }
     }
 }
+*/

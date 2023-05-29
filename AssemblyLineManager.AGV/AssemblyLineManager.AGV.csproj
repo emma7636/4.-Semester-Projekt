@@ -1,28 +1,28 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Library</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <Title>ALM AGV</Title>
-	<Authors>marc7636, bare.mikkel, alex, kimjelassen, LucasHermann, Kochemanden</Authors>
-	<PackageTags>library</PackageTags>
-    <Company />
-    <AssemblyName>AssemblyLineManager.AGV</AssemblyName>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-	<Version>1.1.2</Version>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Library</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<Title>ALM AGV</Title>
+		<Authors>marc7636, bare.mikkel, alex, kimjelassen, LucasHermann, Kochemanden</Authors>
+		<PackageTags>library</PackageTags>
+		<Company />
+		<AssemblyName>AssemblyLineManager.AGV</AssemblyName>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<Version>1.4.0</Version>
+	</PropertyGroup>
 
-  <ItemGroup>
-	<None Include="..\README.md">
-	    <Pack>True</Pack>
-		<PackagePath>\</PackagePath>
-	</None>
-    <PackageReference Include="AssemblyLineManager.CommonLib" Version="1.2.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<PackageReference Include="AssemblyLineManager.CommonLib" Version="1.4.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	</ItemGroup>
 
 </Project>

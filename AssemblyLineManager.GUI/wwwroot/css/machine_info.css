@@ -1,0 +1,25 @@
+@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+
+#wrapper {
+    display: flex;
+    justify-content: center;
+    padding-top: 10%;
+}
+
+.mci {
+    margin-left: 1%;
+    margin-right: 1%;
+    background-color: rgb(237, 237, 237);
+    border: 3px solid rgb(208, 208, 208);
+    width: 22%;
+    float: left;
+}
+
+.mci>* {
+    padding-left: 2%;
+
+}
+
+h1 {
+    text-align: center;
+}

@@ -12,11 +12,16 @@ namespace AssemblyLineManager.CommonLib;
 public interface ICommunicationController
 {
     /// <summary>
+    /// This property is used to get the name of the module so each module can be individually referenced.
+    /// </summary>
+    public string Name { get; }
+
+    /// <summary>
     /// This method is used to get the current state of the machine utilised by the module.
     /// The state information shall be formatted as a list of information with each entry having a name and a value.
     /// </summary>
-    /// <returns>It shall return an array of key-value pairs, where the key is the name of the entry, and the value is the value of the entry.</returns>
-    public KeyValuePair<string, string>[] GetState();
+    /// <returns>It shall return a dictionary, where the key is the name of the entry, and the value is the value of the entry.</returns>
+    public Dictionary<string, string> GetState();
 
     /// <summary>
     /// This method is used to send a command to the machine utilised by the module.
@@ -26,5 +31,5 @@ public interface ICommunicationController
     /// <param name="command">command is the name of the command to be sent.</param>
     /// <param name="commandParameters">The commandParameters is an array of strings that the module can use however it wants to receive additional information to sent along with the command.</param>
     /// <returns>Returns a boolean describing success or failure of the operation attempted</returns>
-    public bool SendCommand(string machineName, string command, string[]? commandParameters = null);
+    public bool SendCommand(string command, string[]? commandParameters = null);
 }

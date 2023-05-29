@@ -1,0 +1,65 @@
+@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+
+.body {
+    margin: 0%;
+}
+
+#button_group {
+    position: absolute;
+    left: 25%;
+    top: 15%;
+    width: 50%;
+    height: 10%;
+    margin-left: -10px;
+    margin-top: -10px;
+   /* border: 3px solid green;*/
+}
+
+    #button_group button {
+        width: 32%;
+        height: 100%;
+        border: none;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        background-image: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet, red);
+        background-size: 1500% auto;
+    }
+/* Define the rainbow animation */
+@keyframes rainbow {
+    0% {
+        background-position: 0% 50%;
+    }
+    /* The background position starts at 0% horizontally and 50% vertically */
+    100% {
+        background-position: 100% 50%;
+    }
+    /* The background position ends at 100% horizontally and 50% vertically */
+}
+
+#button_group button:hover {
+    animation: rainbow 2s ease infinite;
+}
+
+#wrapper {
+    display: flex;
+    justify-content: center;
+    padding-top: 10%;
+}
+
+.mci {
+    margin-left: 1%;
+    margin-right: 1%;
+    background-color: rgb(237, 237, 237);
+    border: 3px solid rgb(208, 208, 208);
+    width: 22%;
+    float: left;
+}
+
+    .mci > * {
+        padding-left: 2%;
+    }
+
+h1 {
+    text-align: center;
+}

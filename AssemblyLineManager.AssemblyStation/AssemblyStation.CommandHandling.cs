@@ -10,7 +10,13 @@ public partial class AssemblyStation
 {
     //Storing the packets we receive so we can access them when needed
     private Echo? latestEcho;
-    private Status latestStatus = new Status();
+    private Status latestStatus = new Status()
+    {
+        LastOperation = 0,
+        CurrentOperation = 0,
+        State = 0,
+        TimeStamp = new DateTime()
+    };
     private CheckHealth? latestCheckHealth;
 
     private async Task SendPayload(int operation)
@@ -56,9 +62,9 @@ public partial class AssemblyStation
 
                 break;
             case "emulator/status":
-                Console.WriteLine("status");
-                Console.WriteLine(Encoding.UTF8.GetString(e.ApplicationMessage.Payload));
-                Console.WriteLine("QoS: " + e.ApplicationMessage.QualityOfServiceLevel.ToString());
+                //Console.WriteLine("status");
+                //Console.WriteLine(Encoding.UTF8.GetString(e.ApplicationMessage.Payload));
+                //Console.WriteLine("QoS: " + e.ApplicationMessage.QualityOfServiceLevel.ToString());
 
                 Status? newStatus = JsonConvert.DeserializeObject<Status>(json);
                 if (newStatus != null)

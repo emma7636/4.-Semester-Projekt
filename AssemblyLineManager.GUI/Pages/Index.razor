@@ -1,0 +1,174 @@
+@page "/"
+@inject Core.Core core;
+@inject IJSRuntime jsRuntime;
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/index.css">
+    <title>Index</title>
+</head>
+
+<body>
+    <div id="button_group">
+        <button @onclick="StartAndStop">@startStopText</button>
+        <button @onclick="Pause">@changeButtonText</button>
+        <button @onclick="Clear">Clear queue</button>
+    </div>
+
+    <div id="wrapper">
+        <div class="mci" id="warehouse">
+            <h1>Warehouse</h1>
+            <h3>State</h3>
+            <p>@Warehouse_state</p>
+            <h3>Timestamp</h3>
+            <p>@Warehouse_timestamp</p>
+            <h3>Inventory</h3>
+            <ol>
+                @foreach (var item in Warehouse_Inventory)
+                {
+                    @if (item.Value == "")
+                    {
+                        <li>Empty</li>
+                    }
+                    else
+                    {
+                        <li>@item.Value</li>
+                    }
+                }
+            </ol>
+        </div>
+
+        <div class="mci" id="AGV">
+            <h1>AGV</h1>
+            <h3>State</h3>
+            <p>@AGV_state</p>
+            <h3>Battery</h3>
+            <p>@AGV_battery</p>
+            <h3>Program</h3>
+            <p>@AGV_program</p>
+            <h3>Timestamp</h3>
+            <p>@AGV_timestamp</p>
+        </div>
+
+        <div class="mci" id="Assemblystation">
+            <h1>Assemblystation</h1>
+            <h3>State</h3>
+            <p>@Assembly_station_state</p>
+            <h3>Current operation</h3>
+            <p>@Assembly_station_cOperation</p>
+            <h3>Last operation</h3>
+            <p>@Assembly_station_lOperation</p>
+            <h3>Timestamp</h3>
+            <p>@Assembly_station_timestamp</p>
+        </div>
+    </div>
+</body>
+
+</html>
+
+@code {
+    [Parameter]
+    public string changeButtonText { get; set; } = "Pause";
+    public string startStopText { get; set; } = "Start";
+
+    //Warehouse
+    public string Warehouse_state { get; set; } = "";
+    public string Warehouse_timestamp { get; set; } = "";
+    public Dictionary<int, string> Warehouse_Inventory { get; set; } = new Dictionary<int, string>();
+    public string Inventory { get; set; } = "";
+    //Assembly station
+    public string Assembly_station_state { get; set; } = "";
+    public string Assembly_station_lOperation { get; set; } = "";
+    public string Assembly_station_cOperation { get; set; } = "";
+    public string Assembly_station_timestamp { get; set; } = "";
+    //AGV
+    public string AGV_state { get; set; } = "";
+    public string AGV_battery { get; set; } = "";
+    public string AGV_program { get; set; } = "";
+    public string AGV_timestamp { get; set; } = "";
+
+    private int itemChoice { get; set; } = 0;
+    private bool endless { get; set; } = true;
+
+    void StartAndStop()
+    {
+        if(core.IsRunning())
+        {
+            core.StopAssemblyLine();
+        } else
+        {
+            jsRuntime.InvokeAsync<object>("open", "Options");
+        }   
+    }
+    void changeStartStopButton()
+    {
+        if (core.IsRunning())
+        {
+            startStopText = "Stop production";
+        }
+        else
+        {
+            startStopText = "Start production";
+        }
+        InvokeAsync(() => StateHasChanged());
+    }
+    void Pause()
+    {
+        if (core.IsRunning())
+        {
+            core.PauseAssemblyLine();
+            changeButtonText = "Resume";
+        }
+        else
+        {
+            core.ResumeAssemblyLine();
+            changeButtonText = "Pause";
+        }
+        InvokeAsync(() => StateHasChanged());
+    }
+    void Clear()
+    {
+        if (!core.IsRunning())
+            core.StopAssemblyLine();
+    }
+
+    private void update_warehouse()
+    {
+        Warehouse_state = core.GetState("Warehouse")["state"];
+        Warehouse_timestamp = core.GetState("Warehouse")["timestamp"];
+        Warehouse_Inventory = core.GetInventory("Warehouse");
+        InvokeAsync(() => StateHasChanged());
+    }
+    private void update_agv()
+    {
+        AGV_state = core.GetState("AGV")["state"];
+        AGV_battery = core.GetState("AGV")["battery"];
+        AGV_program = core.GetState("AGV")["program name"];
+        AGV_timestamp = core.GetState("AGV")["timestamp"];
+        InvokeAsync(() => StateHasChanged());
+    }
+
+    private void update_assembly()
+    {
+        Assembly_station_state = core.GetState("AssemblyStation")["state"];
+        Assembly_station_lOperation = core.GetState("AssemblyStation")["lastOperation"];
+        Assembly_station_cOperation = core.GetState("AssemblyStation")["currentOperation"];
+        Assembly_station_timestamp = core.GetState("AssemblyStation")["timeStamp"];
+        InvokeAsync(() => StateHasChanged());
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            InvokeAsync(() => update_agv());
+            InvokeAsync(() => update_assembly());
+            InvokeAsync(() => update_warehouse());
+            InvokeAsync(() => changeStartStopButton());
+        }
+    }
+}

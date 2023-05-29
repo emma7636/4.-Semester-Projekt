@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Nodes;
+using System.Text.Json.Nodes;
 using System.Xml.Linq;
 using System.IO;
 using System.Net.Http;
@@ -32,8 +32,12 @@ namespace AssemblyLineManager.Warehouse
         static string? path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         private static HttpClient client = new HttpClient();
         private static bool connected = false;
+        private static Dictionary<int, string> stateLUT = new Dictionary<int, string>();
         public Warehouse()
         {
+            stateLUT.Add(0, "Idle");
+            stateLUT.Add(1, "Executing");
+            stateLUT.Add(2, "Error");
             RunAsync().Wait();
         }
         public static bool Connected
@@ -41,6 +45,15 @@ namespace AssemblyLineManager.Warehouse
             get { return connected; }
             set { connected = value; }
         }
+
+        public string Name
+        {
+            get
+            {
+                return "Warehouse";
+            }
+        }
+
         /**
          * Sends a SOAP xml file to the warehouse and picks an item on the shelf with the same id
          * 
@@ -159,7 +172,7 @@ namespace AssemblyLineManager.Warehouse
          */
         private static async Task<HttpResponseMessage> SendGetInventory()
         {
-            HttpResponseMessage response = await client.PostAsync("/Service.asmx", SetSC("GetInventory.xml"));
+            HttpResponseMessage response = client.PostAsync("/Service.asmx", SetSC("GetInventory.xml")).GetAwaiter().GetResult();
             return response;
         }
         /**
@@ -219,7 +232,6 @@ namespace AssemblyLineManager.Warehouse
             {
                 inventory.Add(new KeyValuePair<int, string>(item.Id, item.Content));
             }
-            //KeyValuePair<int, string>[] newInventory = inventory.ToArray();
 
             return inventory.ToArray();
         }
@@ -232,11 +244,11 @@ namespace AssemblyLineManager.Warehouse
         {
             dynamic dyna = IterateInventory();
             int state = (int)dyna["State"];
-            List<KeyValuePair<string, string>> stateList = new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>("State: ", state.ToString())
-            };
-            return stateList.ToArray();
+            string timestamp = (string)dyna["DateTime"];
+            KeyValuePair<string, string>[] key = new KeyValuePair<string, string>[2];
+            key[0] = new KeyValuePair<string, string>("state", stateLUT[state]);
+            key[1] = new KeyValuePair<string, string>("timestamp", timestamp);
+            return key;
         }
         /**
          * Sends commands to the machine from the front end
@@ -244,33 +256,20 @@ namespace AssemblyLineManager.Warehouse
          * @param string machineName, string command, string[]? commandParameters = null
          * @return bool
          */
-        public bool SendCommand(string machineName, string command, string[]? commandParameters = null)
+        public bool SendCommand(string command, string[]? commandParameters = null)
         {
             if (commandParameters != null) {
                 int itemId = Int32.Parse(commandParameters[0]);
                 if (command == "Pick Item")
                 {
-                    HttpResponseMessage response = PickItem(itemId).Result;
-                    if (CommandChecker(response))
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }     
+                    HttpResponseMessage response = PickItem(itemId).GetAwaiter().GetResult();
+                    return CommandChecker(response);
                 }
                 else if (command == "Insert Item")
                 {
                     string itemName = commandParameters[1];
-                    HttpResponseMessage response = InsertItem(itemId, itemName).Result;
-                    HttpResponseMessage response1 = response;
-                    if (CommandChecker(response)) {
-                        return true;
-                    }
-                    else {
-                        return false;
-                    }
+                    HttpResponseMessage response = InsertItem(itemId, itemName).GetAwaiter().GetResult();
+                    return CommandChecker(response);
                 }
             }
             return false;
@@ -283,7 +282,7 @@ namespace AssemblyLineManager.Warehouse
          */
         private static dynamic IterateInventory()
         {
-            HttpResponseMessage response = SendGetInventory().Result;
+            HttpResponseMessage response = SendGetInventory().GetAwaiter().GetResult();
             XmlDocument doc = new XmlDocument();
             doc.Load(response.Content.ReadAsStream());
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
